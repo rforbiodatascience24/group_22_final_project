@@ -62,7 +62,7 @@ merged_clean_aug_long_nested <- merged_clean_aug_long_nested |>
 merged_clean_aug_long_nested
 ```
 
-### Maybe delete? 
+### Maybe delete?
 
 ```{r}
 merged_clean_aug_long_nested |>
