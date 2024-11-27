@@ -4,4 +4,119 @@ format: html
 editor: visual
 ---
 
-## Genes associated with smoking - Error bar plot 
+## Genes associated with smoking - Error bar plot
+
+```{r}
+merged_clean_aug_long <- merged_clean_aug |> 
+  select(status_num, starts_with("ilmn")) |> 
+  pivot_longer(cols = starts_with("ilmn"),
+               names_to = "gene",
+               values_to = "expr_level"
+               ) |> 
+  mutate(log2_expr = log2(expr_level)) 
+
+print(merged_clean_aug_long)
+
+
+
+```
+
+\
+
+```{r}
+merged_clean_aug_long_nested <- merged_clean_aug_long |> 
+  group_by(gene) |> 
+  nest() |>  
+  ungroup()
+
+merged_clean_aug_long_nested
+```
+
+```{r}
+merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
+  group_by(gene) |> 
+  mutate(model_object = map(.x = data,
+                   .f = ~lm(formula = log2_expr ~ status_num,
+                            data = .x)))
+merged_clean_aug_long_nested
+```
+
+### Maybe delete?
+
+```{r}
+merged_clean_aug_long_nested |>
+  
+  # Here, you should replace "g2E09" with whatever was YOUR favourite gene!
+  filter(gene == "ilmn_1343293") |> 
+  
+  # Pull() on tibbles: This pulls out the model_object variable.
+  #   Note! This is a list, because we nested!
+  pull(model_object) |> 
+  
+  # Pluck() on lists: From the list we got from the last step,
+  #   we "pluck" the first element
+  pluck(1) |>
+  
+  # The result of pluck, is a model object,
+  #   upon which we can call the tidy function
+  tidy(conf.int = TRUE,
+       conf.level = 0.95)
+```
+
+```{r}
+merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
+  mutate(model_object_tidy = map(.x = model_object, #specifies that the function will be applied to the model_object column
+                                 .f = ~tidy(x = .x, # The x argument refers to the current model object being processed from the model_object column
+                                            conf.int = TRUE, #include confidence intervals 
+                                            conf.level = 0.95)))
+merged_clean_aug_long_nested
+```
+
+```{r}
+merged_estimates <- merged_clean_aug_long_nested |> 
+  unnest(model_object_tidy)
+
+merged_estimates
+```
+
+```{r}
+merged_estimates <- merged_estimates |> 
+  filter(term == "status_num") |> 
+  select(gene, p.value, estimate, conf.low, conf.high) |> 
+  ungroup()
+
+cols_to_convert <- c("p.value", "estimate", "conf.low", "conf.high")
+merged_estimates[cols_to_convert] <- lapply(merged_estimates[cols_to_convert],
+                                            function(x) as.numeric(as.character(x)))
+
+merged_estimates
+```
+
+```{r}
+merged_estimates <- merged_estimates |> 
+  mutate(q.value = p.adjust(p.value),
+         is_significant = case_when(q.value <= 0.05 ~ "yes",
+                                    q.value > 0.05 ~ "no"))
+
+merged_estimates
+```
+
+```{r}
+merged_estimates |> 
+  filter(is_significant == "no") |> 
+  ggplot(aes(x = estimate,
+             y = fct_reorder(gene, estimate),
+             xmin = conf.low,
+             xmax = conf.high)) +
+  geom_vline(xintercept = 0) +
+  geom_errorbarh() +
+  geom_point() +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = 1, size = 11),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 5),
+        plot.caption = element_text(size = 7)) +
+  labs(x = "Estimates (95%CIs)",
+       y = "",
+       title = "Genes Associated with xx")
+```
