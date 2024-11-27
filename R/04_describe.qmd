@@ -1,5 +1,5 @@
 ---
-title: "Description of Dataset"
+title: "04_describe"
 format: html
 editor: visual
 ---
@@ -11,45 +11,53 @@ library(table1)
 library(patchwork)
 library(ggplot2)
 library(dplyr)
+library(gt)
+library(gridExtra)
 ```
 
 ## Description
 
 ```{r}
-# Rows and columns in the last 
+# Number of rows and columns in the dataset 
 print(nrow(merged_data))
 print(ncol(merged_data))
-merged_data |> sample_n(5)
-
-
 ```
 
+## Creating a summary table
+
 ```{r}
-library(dplyr)
-library(tidyr)
-library(gt)
-library(gridExtra)
-
-
-# Percentages of non_smoker, smoker and overall in the different categories
-label(merged_data$age_years) <- "Age (Years)"
-label(merged_data$maternal_bmi) <- "Maternal BMI"
-label(merged_data$gestational_age_weeks) <- "Gestational Age (Weeks)"
-label(merged_data$placental_volume_cm3) <- "Placental Volume (cm³)"
-
-# Generate the table with customized labels
-merged_data |>
-  slice_head(n = num_mothers) |>
-  table1(
-    x = formula(~ age_years + maternal_bmi + gestational_age_weeks + placental_volume_cm3 | status),
-    data = _
+# Making a summary table
+summary_table_merged_data <- merged_data |> 
+  group_by(status) |> 
+  summarise(
+    `count` = n(),
+    `Age in years median (range)` = paste0(median(age_years),                                  # Calculating the median and range of age
+                                            " (", min(age_years),
+                                            "-", max(age_years), 
+                                            ")"),
+    `Maternal BMI mean (range)` = paste0(round(mean(maternal_bmi), 1),                         # Calculating the median and range of BMI
+                                           " (", min(maternal_bmi), 
+                                           "-", max(maternal_bmi), 
+                                           ")"),
+    `Parity mean` = paste0(round(mean(parity), 1)),                                            # Calculating the mean of parity
+    `Gestational Age in weeks median (range)` = paste0(median(gestational_age_weeks),          # Calculating the mean and range of GA
+                                                        " (", min(gestational_age_weeks),     
+                                                        "-", max(gestational_age_weeks), 
+                                                        ")")
   )
+# Transposing the table
+summary_table <- t(summary_table_merged_data)
+print(summary_table)
 
+# Now we want to count how many genes there are, and add this to the table
+summary_table <- merged_data |>
+  mutate("Number of genes" = select(starts_with("ilmn")) |> #Selecting all columns that start with "ILMN"
+  ncol()
 
+print(summary_table)
 ```
 
 ```{r}
-
 bp_age <- merged_data |>
   ggplot(aes(x = status, y = age_years, fill = status)) +
   geom_boxplot() +
@@ -128,45 +136,6 @@ ggsave("../results/plots/description_placental_volume_boxplot.png")
 ```
 
 ```{r}
-bp_gestational_age <- merged_data |>
-  ggplot(aes(x = status, y = gestational_age_weeks, fill = status)) +
-  geom_boxplot() +
-  labs(
-    x = "Status",
-    y = "Gestational age (weeks)",
-    title = "Boxplot of Gestational Age by Smoking Status"
-  ) +
-  scale_fill_manual(
-      values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
-    ) +
-  theme(
-      panel.background = element_rect(fill = "white"),
-      plot.background = element_rect(fill = "white"),
-      panel.grid.major = element_line(color = "gray90"),
-      panel.grid.minor = element_blank(),
-      axis.text = element_text(size = 5, color = "black"),
-      axis.title = element_text(size = 7, color = "black"),
-      plot.title = element_text(size = 7, face = "bold", color = "black"))
-
-ggsave("../results/plots/description_gestational_age_boxplot.png")
-
-```
-
-```{r}
-ggplot(merged_data, aes(x = as.factor(parity), y = age_years)) +
-  geom_boxplot(fill = "#63B8B8") +
-  labs(
-    title = "Age Distribution by Parity",
-    x = "Parity (Number of Children)",
-    y = "Age (Years)"
-  ) +
-  theme_minimal()
-
-
-ggsave("../results/plots/description_parity_age_boxplot.png")
-```
-
-```{r}
 (bp_placental_volume + theme(legend.position = "none") + 
      (bp_maternal_bmi + theme(legend.position = "none")
       )) / bp_age + 
@@ -202,9 +171,32 @@ ggplot(merged_data, aes(x = mode_of_delivery, y = maternal_bmi, fill = mode_of_d
   geom_violin(trim = FALSE) +
   labs(title = "Maternal BMI by Mode of Delivery", x = "Mode of Delivery", y = "Maternal BMI") +
   theme_minimal()
-
 ```
 
-```{r}
+## Correlation between BMI_class and smokers
 
+```{r}
+bp_bmi_classs_status <- merged_data |>
+  ggplot(aes(x = bmi_class, fill = status)) +
+  geom_bar() +
+  labs(
+    x = "BMI Class",
+    y = "Count ",
+    title = "Relationship between BMI Class and Status"
+  ) +
+  scale_fill_manual(
+      values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
+    ) +
+  theme(
+      panel.background = element_rect(fill = "white"),
+      plot.background = element_rect(fill = "white"),
+      panel.grid.major = element_line(color = "gray90"),
+      panel.grid.minor = element_blank(),
+      axis.text = element_text(size = 5, color = "black"),
+      axis.title = element_text(size = 7, color = "black"),
+      plot.title = element_text(size = 7, face = "bold", color = "black"))
+
+ggsave("../results/plots/description_bmi_class_boxplot.png")
+
+print(bp_bmi_classs_status)
 ```
