@@ -1,0 +1,7 @@
+---
+title: "07_analysis 3"
+format: html
+editor: visual
+---
+
+## Genes associated with smoking - Error bar plot 
