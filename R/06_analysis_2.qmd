@@ -4,23 +4,86 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+### Loading libraries
 
 ```{r}
-1 + 1
+library(broom)
 ```
-
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
+gene_cols <- grep("^ilmn",
+                  names(merged_data),
+                  value = TRUE)
+
+
+merged_log2_fold <- merged_data |> 
+  group_by(status) |> 
+  summarise(across(all_of(gene_cols), mean, na.nr = TRUE)) |> 
+  pivot_longer(cols = -status,
+               names_to = "gene",
+               values_to = "mean_expr") |> 
+  pivot_wider(names_from = status, 
+              values_from = mean_expr) |> 
+  mutate(log2_fold_change = log2(`smoker` / `non-smoker`)) |> 
+
+
+# View the resulting data
+print(merged_log2_fold)
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```{r}
+merged_clean_aug_long <- merged_clean_aug |> 
+  select(status_num, starts_with("ilmn")) |> 
+  pivot_longer(cols = starts_with("ilmn"),
+               names_to = "gene",
+               values_to = "expr_level"
+               ) |> 
+  mutate(log2_expr = log2(expr_level)) 
+
+print(merged_clean_aug_long)
+```
+
+```{r}
+merged_clean_aug_long_nested <- merged_clean_aug_long |> 
+  group_by(gene) |> 
+  nest() |>  
+  ungroup()
+
+merged_clean_aug_long_nested
+```
+
+```{r}
+merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
+  group_by(gene) |> 
+  mutate(model_object = map(.x = data,
+                   .f = ~lm(formula = log2_expr ~ status_num,
+                            data = .x)))
+merged_clean_aug_long_nested
+```
+
+### Maybe delete?
+
+```{r}
+merged_clean_aug_long_nested |>
+  
+  # Here, you should replace "g2E09" with whatever was YOUR favourite gene!
+  filter(gene == "ilmn_1343293") |> 
+  
+  # Pull() on tibbles: This pulls out the model_object variable.
+  #   Note! This is a list, because we nested!
+  pull(model_object) |> 
+  
+  # Pluck() on lists: From the list we got from the last step,
+  #   we "pluck" the first element
+  pluck(1) |>
+  
+  # The result of pluck, is a model object,
+  #   upon which we can call the tidy function
+  tidy(conf.int = TRUE,
+       conf.level = 0.95)
+```
+
+```{r}
+
+```
