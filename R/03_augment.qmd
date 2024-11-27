@@ -52,3 +52,16 @@ merged_data <- merged_data |>
 # Checking the classes are divided correctly and age_group is placed after age_years
 print(head(merged_data))
 ```
+
+### Converting status to numeric values
+
+```{r}
+merged_clean_aug <- merged_data |> 
+  mutate(y = case_when(status == "smoker" ~ 1,
+                       status == "non-smoker" ~ 0)) |> 
+  relocate(status_num = y)
+
+merged_clean_aug
+```
+
+### 
