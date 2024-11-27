@@ -4,4 +4,62 @@ format: html
 editor: visual
 ---
 
-## 
+### Source functions
+
+```{r}
+source("../R/99_proj_func.R")
+```
+
+### Loading libraries
+
+```{r}
+#| message: false
+library(tidyr)
+library(R.utils)
+library(httr)
+library(readr)
+library(stringr)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(reshape2)
+library(jsonlite)
+library(illuminaio)
+```
+
+### Load data directories
+
+```{r}
+create_dir("../_raw")
+create_dir("../data")
+create_dir("../results")
+create_dir("../results/plots")
+```
+
+### Load files
+
+```{r}
+file.info("../_raw/raw_annotation_cleaned.bgx")$size
+raw_dir <- "../_raw/"
+
+download_dataset_ncbi(raw_dir)
+#download_data_annotation_ncbi(raw_dir)
+
+ncbi_data <- read_ncbi_table(str_c(raw_dir, "raw_data_ncbi.txt.gz"))
+#annotation_data <- read_bgx_file(raw_dir, "raw_annotation.bgx.gz")
+
+ncbi_data
+#annotation_data
+```
+
+### Write files
+
+The files that we have just loaded above should be written to a tsv file in our data folder. This folder contains our data frames.
+
+```{r}
+write_tsv(ncbi_data,
+            file = "../data/01_ncbi_data.tsv.gz")
+
+#write_tsv(annotation_data,
+            #file = "../data/01_ncbi_annot_probes.tsv.gz")
+```
