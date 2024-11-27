@@ -15,7 +15,6 @@ gene_cols <- grep("^ilmn",
                   names(merged_data),
                   value = TRUE)
 
-
 merged_log2_fold <- merged_data |> 
   group_by(status) |> 
   summarise(across(all_of(gene_cols), mean, na.nr = TRUE)) |> 
@@ -24,66 +23,47 @@ merged_log2_fold <- merged_data |>
                values_to = "mean_expr") |> 
   pivot_wider(names_from = status, 
               values_from = mean_expr) |> 
-  mutate(log2_fold_change = log2(`smoker` / `non-smoker`)) |> 
+  mutate(log2_fold_change = log2(`smoker` / `non-smoker`))
 
 
-# View the resulting data
+p_values <- merged_data |>
+  pivot_longer(cols = all_of(gene_cols), names_to = "gene", values_to = "expression") |>
+  group_by(gene) |> 
+  summarise(p_value = t.test(expression ~ status)$p.value)
+
+merged_log2_fold <- merged_log2_fold |> 
+  left_join(p_values, by = "gene")
+
 print(merged_log2_fold)
 
+# Count how many p-values are under 0.05 and thereby significant different
+significant_genes_count <- merged_log2_fold |>
+  filter(p_value < 0.05) |>
+  summarise(count = n())
+
+print(significant_genes_count)
 ```
 
-```{r}
-merged_clean_aug_long <- merged_clean_aug |> 
-  select(status_num, starts_with("ilmn")) |> 
-  pivot_longer(cols = starts_with("ilmn"),
-               names_to = "gene",
-               values_to = "expr_level"
-               ) |> 
-  mutate(log2_expr = log2(expr_level)) 
-
-print(merged_clean_aug_long)
-```
+### Volcano plot of up- and downregulated genes in smokers
 
 ```{r}
-merged_clean_aug_long_nested <- merged_clean_aug_long |> 
-  group_by(gene) |> 
-  nest() |>  
-  ungroup()
+# Categorize genes as upregulated or downregulated
+merged_log2_fold <- merged_log2_fold |>
+  mutate(Regulation = case_when(
+    log2_fold_change > 0 ~ "Upregulated",
+    log2_fold_change < 0 ~ "Downregulated"))
 
-merged_clean_aug_long_nested
-```
+# Create a plot
+ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_change, fill = Regulation)) +
+  geom_bar(stat = "identity", width = 0.8) + 
+  coord_flip() +  # Flip coordinates for better readability
+  scale_fill_manual(values = c("Upregulated" = "blue", "Downregulated" = "red", "Neutral" = "grey")) +
+  labs(title = "Upregulated vs. Downregulated Genes in Smokers",
+       x = "Genes",
+       y = "Log2-Fold Change") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(),  # Remove y-axis gene labels
+        plot.title = element_text(hjust = 0.5))
 
-```{r}
-merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
-  group_by(gene) |> 
-  mutate(model_object = map(.x = data,
-                   .f = ~lm(formula = log2_expr ~ status_num,
-                            data = .x)))
-merged_clean_aug_long_nested
-```
-
-### Maybe delete?
-
-```{r}
-merged_clean_aug_long_nested |>
-  
-  # Here, you should replace "g2E09" with whatever was YOUR favourite gene!
-  filter(gene == "ilmn_1343293") |> 
-  
-  # Pull() on tibbles: This pulls out the model_object variable.
-  #   Note! This is a list, because we nested!
-  pull(model_object) |> 
-  
-  # Pluck() on lists: From the list we got from the last step,
-  #   we "pluck" the first element
-  pluck(1) |>
-  
-  # The result of pluck, is a model object,
-  #   upon which we can call the tidy function
-  tidy(conf.int = TRUE,
-       conf.level = 0.95)
-```
-
-```{r}
 
 ```
