@@ -7,7 +7,7 @@ editor: visual
 ### Loading libraries
 
 ```{r}
-library(broom)
+library(dplyr)
 ```
 
 ```{r}
@@ -47,23 +47,43 @@ print(significant_genes_count)
 ### Volcano plot of up- and downregulated genes in smokers
 
 ```{r}
-# Categorize genes as upregulated or downregulated
+# Categorizing genes as upregulated or downregulated based on log2_fold_change
 merged_log2_fold <- merged_log2_fold |>
   mutate(Regulation = case_when(
     log2_fold_change > 0 ~ "Upregulated",
-    log2_fold_change < 0 ~ "Downregulated"))
+    log2_fold_change < 0 ~ "Downregulated")) |>
+  mutate(Significance = case_when(
+    p_value < 0.05 ~ "Significant",
+    p_value > 0.05 ~ "Not significant"
+  ))
 
-# Create a plot
+merged_log2_fold
+
 ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_change, fill = Regulation)) +
   geom_bar(stat = "identity", width = 0.8) + 
-  coord_flip() +  # Flip coordinates for better readability
-  scale_fill_manual(values = c("Upregulated" = "blue", "Downregulated" = "red", "Neutral" = "grey")) +
+  coord_flip() +  # Flip coordinates so the plot is more interpretable 
+  scale_fill_manual(values = c("Upregulated" = "blue", "Downregulated" = "red")) +
   labs(title = "Upregulated vs. Downregulated Genes in Smokers",
        x = "Genes",
        y = "Log2-Fold Change") +
   theme_minimal() +
-  theme(axis.text.y = element_blank(),  # Remove y-axis gene labels
+  theme(axis.text.y = element_blank(),  # Removing y-axis gene labels
         plot.title = element_text(hjust = 0.5))
+```
 
+```{r}
+
+```
+
+## Extract the top 30 genes with the largest absolute log2_fold_change
+
+```{r}
+top_genes <- merged_log2_fold |>
+  mutate(abs_log2_fold_change = abs(log2_fold_change)) |> 
+  arrange(desc(abs_log2_fold_change)) |>
+  slice_head(n = 30) |>
+  select(-abs_log2_fold_change) 
+
+print(top_genes)
 
 ```
