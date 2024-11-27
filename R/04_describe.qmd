@@ -1,9 +1,8 @@
 ---
-title: "04_describe"
+title: "Description of Dataset"
 format: html
 editor: visual
 ---
-
 
 ```{r}
 #| message: false
@@ -30,40 +29,6 @@ library(dplyr)
 library(tidyr)
 library(gt)
 library(gridExtra)
-
-# Step 1: Compute Summary Statistics
-summary_table <- merged_data |>
-  group_by(status) |>
-  summarise(
-    `Study cohort (N)` = as.character(n()),  # Convert integer to character
-    `Age (years) - median (range)` = paste0(median(age_years, na.rm = TRUE), 
-                                            " (", min(age_years, na.rm = TRUE), "-", max(age_years, na.rm = TRUE), ")"),
-    `Maternal BMI - mean (range)` = paste0(round(mean(maternal_bmi, na.rm = TRUE), 1), 
-                                           " (", min(maternal_bmi, na.rm = TRUE), "-", max(maternal_bmi, na.rm = TRUE), ")"),
-    `Gestational age (weeks) - median (range)` = paste0(median(gestational_age_weeks, na.rm = TRUE), 
-                                                      " (", min(gestational_age_weeks, na.rm = TRUE), "-", max(gestational_age_weeks, na.rm = TRUE), ")"),
-    `Parity (1/2/3/4/5/7)` = paste(table(parity), collapse = "/"),
-    `Mode of delivery (vaginal/caesarean)` = paste(sum(mode_of_delivery == "vaginal", na.rm = TRUE), "/", 
-                                                   sum(mode_of_delivery == "caesarean", na.rm = TRUE)),
-    `Placental volume (cm³) - mean (range)` = paste0(round(mean(placental_volume_cm3, na.rm = TRUE), 1), 
-                                                     " (", min(placental_volume_cm3, na.rm = TRUE), "-", max(placental_volume_cm3, na.rm = TRUE), ")")
-  )
-
-# Step 2: Flip the Table
-flipped_table <- summary_table |>
-  pivot_longer(-status, names_to = "Parameter", values_to = "Value") |>
-  pivot_wider(names_from = status, values_from = Value)
-
-# Step 3: Format as a Table
-formatted_table <- flipped_table |>
-  gt() |>
-  tab_header(
-    title = "Summary Statistics by Parameter"
-  )
-
-# Display the Table
-formatted_table
-
 
 
 # Percentages of non_smoker, smoker and overall in the different categories
@@ -163,6 +128,45 @@ ggsave("../results/plots/description_placental_volume_boxplot.png")
 ```
 
 ```{r}
+bp_gestational_age <- merged_data |>
+  ggplot(aes(x = status, y = gestational_age_weeks, fill = status)) +
+  geom_boxplot() +
+  labs(
+    x = "Status",
+    y = "Gestational age (weeks)",
+    title = "Boxplot of Gestational Age by Smoking Status"
+  ) +
+  scale_fill_manual(
+      values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
+    ) +
+  theme(
+      panel.background = element_rect(fill = "white"),
+      plot.background = element_rect(fill = "white"),
+      panel.grid.major = element_line(color = "gray90"),
+      panel.grid.minor = element_blank(),
+      axis.text = element_text(size = 5, color = "black"),
+      axis.title = element_text(size = 7, color = "black"),
+      plot.title = element_text(size = 7, face = "bold", color = "black"))
+
+ggsave("../results/plots/description_gestational_age_boxplot.png")
+
+```
+
+```{r}
+ggplot(merged_data, aes(x = as.factor(parity), y = age_years)) +
+  geom_boxplot(fill = "#63B8B8") +
+  labs(
+    title = "Age Distribution by Parity",
+    x = "Parity (Number of Children)",
+    y = "Age (Years)"
+  ) +
+  theme_minimal()
+
+
+ggsave("../results/plots/description_parity_age_boxplot.png")
+```
+
+```{r}
 (bp_placental_volume + theme(legend.position = "none") + 
      (bp_maternal_bmi + theme(legend.position = "none")
       )) / bp_age + 
@@ -204,4 +208,3 @@ ggplot(merged_data, aes(x = mode_of_delivery, y = maternal_bmi, fill = mode_of_d
 ```{r}
 
 ```
-
