@@ -4,4 +4,51 @@ format: html
 editor: visual
 ---
 
-## 
+## Creating BMI classes, and dividing the mothers
+
+```{r}
+#| eval: true
+#| echo: true
+
+# Starting out by dividing BMI into seven classes
+merged_data <- merged_data |> 
+  # Making the conversion code
+  mutate(bmi_class = case_when(maternal_bmi < 16.5 ~ "Severely underweight",
+                               16.5 <= maternal_bmi & maternal_bmi < 18.5 ~ "Underweight",
+                               18.5 <= maternal_bmi & maternal_bmi < 24.9 ~ "Normal weight",
+                               24.9 <= maternal_bmi & maternal_bmi < 30 ~ "Overweight",
+                               maternal_bmi >= 30 & maternal_bmi < 35 ~ "Obesity class I",
+                               maternal_bmi >= 35 & maternal_bmi < 40 ~ "Obesity class II",
+                               maternal_bmi >= 40 ~ "Obesity class III")) |>
+  # Adding it as column in merged_data
+  mutate(bmi_class = factor(bmi_class,
+                            levels = c("Severely underweight",
+                                       "Underweight",
+                                       "Normal weight", 
+                                       "Overweight",
+                                       "Obesity", 
+                                       "Obesity class I",
+                                       "Obesity class II", 
+                                       "Obesity class III"))) |>
+  relocate(bmi_class,
+           .after = maternal_bmi)
+#Ensuring that the column is added the correct place and divided as we want. We still want to keep maternal_bmi.
+print(head(merged_data))
+```
+
+## Dividing the mothers into age groups
+
+```{r}
+merged_data <- merged_data |> 
+  # Adding an age_group column and telling how the age_group should be divided. 
+  mutate(age_group = cut(age_years,
+                         breaks = c(10,
+                                    20,
+                                    30,
+                                    40,
+                                    50))) |>
+  relocate(age_group,
+           .after = age_years) #Adding age_group after age_years
+# Checking the classes are divided correctly and age_group is placed after age_years
+print(head(merged_data))
+```
