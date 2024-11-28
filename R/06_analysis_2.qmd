@@ -44,7 +44,7 @@ significant_genes_count <- merged_log2_fold |>
 print(significant_genes_count)
 ```
 
-### Volcano plot of up- and downregulated genes in smokers
+### Plot of up- and downregulated genes in smokers
 
 ```{r}
 # Categorizing genes as upregulated or downregulated based on log2_fold_change
@@ -79,11 +79,23 @@ ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_
 
 ```{r}
 top_genes <- merged_log2_fold |>
+  filter(p_value < 0.05) |>  #Extracting only genes with significant log2 fold change 
   mutate(abs_log2_fold_change = abs(log2_fold_change)) |> 
   arrange(desc(abs_log2_fold_change)) |>
-  slice_head(n = 30) |>
+  slice_head(n = 100) |>
   select(-abs_log2_fold_change) 
 
 print(top_genes)
 
+```
+
+### Heat map of the significant genes
+
+```{r}
+# Filter significant genes based on p-value
+significant_genes <- merged_log2_fold |> 
+  filter(p_value < 0.05) |> 
+  select(gene, log2_fold_change)
+
+significant_genes
 ```

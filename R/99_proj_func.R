@@ -26,7 +26,7 @@ download_data_annotation_ncbi <- function(raw_dir) {
   anotation_file_name <- "raw_annotation.bgx.gz"
   file_path <- str_c(raw_dir, anotation_file_name)
 
-  url_ncbi <- "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GPL6104&format=file&file=GPL6104%5FIllumina%5FHumanRef%2D8%5FV2%5F0%5FR1%5F11223162%5FA%2Ebgx%2Egz"
+  url_ncbi <- "https://ftp.ncbi.nlm.nih.gov/geo/platforms/GPL6nnn/GPL6104/suppl/GPL6104%5FIllumina%5FHumanRef%2D8%5FV2%5F0%5FR1%5F11223162%5FA%2Ebgx%2Egz"
   download.file(url_ncbi, str_c(raw_dir, anotation_file_name))
 
 }

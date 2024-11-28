@@ -57,8 +57,10 @@ print(head(merged_data))
 
 ```{r}
 merged_clean_aug <- merged_data |> 
-  mutate(y = case_when(status == "smoker" ~ 1,
-                       status == "non-smoker" ~ 0)) |> 
+  #Creating a new column that converts status into numeric values
+  mutate(y = case_when(
+    status == "smoker" ~ 1,
+    status == "non-smoker" ~ 0)) |> 
   relocate(status_num = y)
 
 merged_clean_aug

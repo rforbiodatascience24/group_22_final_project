@@ -6,14 +6,20 @@ editor: visual
 
 ## Genes associated with smoking - Error bar plot
 
+#### Creating a table with status, gene names and log2 expression levels
+
 ```{r}
+#Transforming the data to a long format to prepare it for analysis
 merged_clean_aug_long <- merged_clean_aug |> 
-  select(status_num, starts_with("ilmn")) |> 
-  pivot_longer(cols = starts_with("ilmn"),
-               names_to = "gene",
-               values_to = "expr_level"
+  select(status_num, starts_with("ilmn")) |>                      #Selecting relevant columns
+  pivot_longer(cols = starts_with("ilmn"),                        #Specifying which columns to be pivot
+               names_to = "gene",                                 #Making a new column to store the gene names
+               values_to = "expr_level"                           #Making a new column to store the corresponding expression levels in
                ) |> 
-  mutate(log2_expr = log2(expr_level)) 
+  mutate(log2_expr = log2(expr_level))                            #
+
+merged_clean_aug_long <- merged_clean_aug_long |> 
+  select(status_num,gene,log2_expr)
 
 print(merged_clean_aug_long)
 
@@ -21,7 +27,7 @@ print(merged_clean_aug_long)
 
 ```
 
-\
+#### Creating a table with gene names and a data column containing status and log2 expression level for each gene
 
 ```{r}
 merged_clean_aug_long_nested <- merged_clean_aug_long |> 
@@ -31,6 +37,14 @@ merged_clean_aug_long_nested <- merged_clean_aug_long |>
 
 merged_clean_aug_long_nested
 ```
+
+```{r}
+merged_clean_aug_long_nested |>
+  filter(gene == "ilmn_1343291") |> 
+  pull(data)
+```
+
+#### Creating a column with a model_object column
 
 ```{r}
 merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
@@ -63,6 +77,8 @@ merged_clean_aug_long_nested |>
        conf.level = 0.95)
 ```
 
+#### Creating a column with model_object_tidy
+
 ```{r}
 merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
   mutate(model_object_tidy = map(.x = model_object, #specifies that the function will be applied to the model_object column
@@ -72,12 +88,16 @@ merged_clean_aug_long_nested <- merged_clean_aug_long_nested |>
 merged_clean_aug_long_nested
 ```
 
+#### Unnest the model_object_tidy column
+
 ```{r}
 merged_estimates <- merged_clean_aug_long_nested |> 
   unnest(model_object_tidy)
 
 merged_estimates
 ```
+
+#### Filter, Select, and Convert Data Types for Gene Expression Estimates
 
 ```{r}
 merged_estimates <- merged_estimates |> 
@@ -92,6 +112,8 @@ merged_estimates[cols_to_convert] <- lapply(merged_estimates[cols_to_convert],
 merged_estimates
 ```
 
+#### Finding q-value and determining if the results are significant
+
 ```{r}
 merged_estimates <- merged_estimates |> 
   mutate(q.value = p.adjust(p.value),
@@ -99,6 +121,14 @@ merged_estimates <- merged_estimates |>
                                     q.value > 0.05 ~ "no"))
 
 merged_estimates
+```
+
+#### Finding the genes which are significant
+
+```{r}
+merged_estimates |>
+  filter(is_significant == "yes") |> 
+  select(gene, p.value, q.value)
 ```
 
 ```{r}
@@ -118,5 +148,37 @@ merged_estimates |>
         plot.caption = element_text(size = 7)) +
   labs(x = "Estimates (95%CIs)",
        y = "",
-       title = "Genes Associated with xx")
+       title = "Genes Associated with Smoking")
+```
+
+### Plotting of genes which are significant/not significant
+
+```{r}
+library("ggrepel")
+pl <- merged_estimates |>
+  mutate(lbl = case_when(
+    is_significant == "yes" ~ gene,
+    is_significant == "no" ~ "")) |> 
+  ggplot(aes(x = estimate,
+             y = -log10(p.value),
+             colour = is_significant,
+             label = lbl)) +
+  geom_point(size = 1,
+             alpha = 0.5) +
+  geom_text_repel(size = 4,
+                  max.overlaps = 20) +
+  geom_hline(yintercept = 0) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 1),
+    plot.subtitle = element_text(hjust = 1),
+    legend.position = "none") +
+  labs(
+    x = "Estimates",
+    y = "-log10(p)",
+    title = "Volcano plot for down/up regulated genes with significance < 0.05",
+    subtitle = "Genes highlighted in turquoise were significant after multiple testing correction",
+    caption = "Data from DOI: ???")
+
+pl
 ```
