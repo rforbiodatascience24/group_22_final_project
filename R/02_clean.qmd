@@ -92,7 +92,8 @@ merged_data <- ncbi_genes_dirty |>
               select(Probe_Id, ILMN_Gene), by = "Probe_Id") |> 
               relocate(ILMN_Gene, .after = Probe_Id) |> 
               select(-1) |> 
-              mutate(ILMN_Gene = paste("gene_", ILMN_Gene, sep = ""))
+              mutate(ILMN_Gene = paste("gene_", ILMN_Gene, sep = "")) |> 
+              rename(col_1 = ILMN_Gene)
 
 # View the resulting dataset
 print(head(merged_data))
@@ -105,8 +106,8 @@ print(head(merged_data))
 
 ```{r}
 # Transposing and tidying the gene expression data
-tidy_genes <- ncbi_genes_dirty |> 
-  pivot_longer(cols = -1,                  # everything but col1
+tidy_genes <- merged_data |> 
+  pivot_longer(cols = -col_1,                  # everything but col1
                names_to = "Sample",
                values_to = "Expression") |> 
   pivot_wider(names_from = col_1,             # col1 contains the genes
