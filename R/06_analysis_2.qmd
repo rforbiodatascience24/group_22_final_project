@@ -51,4 +51,6 @@ ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_
   theme_minimal() +
   theme(axis.text.y = element_blank(),  # Removing y-axis gene labels
         plot.title = element_text(hjust = 0.5))
+
+ggsave("../results/plots/upregulated_downregulated_genes.png")
 ```
