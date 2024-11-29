@@ -6,9 +6,10 @@ editor: visual
 
 ## Linear regression for genes associated with smoking
 
-### Error bar plot and Vulcano plot
+### Error bar plot and Volcano plot
 
 ```{r}
+#| message: false
 library(tidyverse)
 library(broom)
 library(patchwork)
@@ -150,14 +151,15 @@ merged_estimates |>
         plot.caption = element_text(size = 7)) +
   labs(x = "Estimates (95%CIs)",
        y = "",
-       title = "Genes Associated with Smoking")
+       title = "Genes Associated with Smoking (not significant)",
+       caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 ```
 
 ### Plotting of genes which are significant/not significant
 
 ```{r}
 library("ggrepel")
-pl <- merged_estimates |>
+volcono_plot_q <- merged_estimates |>
   mutate(lbl = case_when(
     is_significant == "yes" ~ gene,
     is_significant == "no" ~ "")) |> 
@@ -170,19 +172,21 @@ pl <- merged_estimates |>
   geom_text_repel(size = 4,
                   max.overlaps = 20) +
   geom_hline(yintercept = 0) +
-  theme_minimal(base_size = 14) +
+  theme_minimal(base_size = 10) +
   theme(
     plot.title = element_text(hjust = 1),
     plot.subtitle = element_text(hjust = 1),
-    legend.position = "none") +
+    legend.position = "none",
+    plot.caption = element_text(size = 6)  # Set smaller caption size here
+  ) +
   labs(
     x = "Estimates",
     y = "-log10(p)",
     title = "Volcano plot for down/up regulated genes with significance < 0.05",
-    subtitle = "Genes highlighted in turquoise were significant after multiple testing correction",
-    caption = "Data from DOI: ???")
+    subtitle = "Significant genes highlighted with turquoise - no significant genes found",
+    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 
-pl
+volcono_plot_q
 ```
 
 Since no significant q-values were found, we decided to look at significant p-values instead.
@@ -225,7 +229,7 @@ merged_estimates_p |>
         axis.text = element_text(size = 5),
         plot.caption = element_text(size = 7)) +
   labs(x = "Estimates (95%CIs)",
-       y = "",
+       y = "Genes",
        title = "Genes Associated with Smoking",
        caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 ```
@@ -359,10 +363,10 @@ merged_estimates_p |>
        caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 ```
 
-### Vulcano plot
+### Volcano plot
 
 ```{r}
-vulcano_plot <- merged_estimates_p |>
+volcano_plot <- merged_estimates_p |>
   mutate(lbl = case_when(
     is_significant == "yes" ~ gene,
     is_significant == "no" ~ "")) |> 
@@ -385,9 +389,9 @@ vulcano_plot <- merged_estimates_p |>
   labs(
     x = "Estimates",
     y = "-log10(p)",
-    title = "Vulcano plot for down/up regulated genes with significance p< 0.05",
+    title = "Volcano plot for down/up regulated genes with significance p< 0.05",
     subtitle = "Genes highlighted in turquoise had a significant p-value",
     caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 
-vulcano_plot
+volcano_plot
 ```
