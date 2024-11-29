@@ -4,15 +4,15 @@ format: html
 editor: visual
 ---
 
-## Creating BMI classes, and dividing the mothers
+### Creating BMI classes, and dividing the mothers
 
 ```{r}
 #| eval: true
 #| echo: true
 
-# Starting out by dividing BMI into seven classes
+# Dividing BMI into seven classes
 merged_data <- merged_data |> 
-  # Making the conversion code
+  # Making the conversion table code
   mutate(bmi_class = case_when(maternal_bmi < 16.5 ~ "Severely underweight",
                                16.5 <= maternal_bmi & maternal_bmi < 18.5 ~ "Underweight",
                                18.5 <= maternal_bmi & maternal_bmi < 24.9 ~ "Normal weight",
@@ -35,7 +35,7 @@ merged_data <- merged_data |>
 print(head(merged_data))
 ```
 
-## Dividing the mothers into age groups
+### Dividing the mothers into age groups
 
 ```{r}
 merged_data <- merged_data |> 
@@ -61,7 +61,7 @@ merged_clean_aug <- merged_data |>
     status == "smoker" ~ 1,
     status == "non-smoker" ~ 0)) |> 
   relocate(status_num = y)
-
+#Checking the conversion
 merged_clean_aug
 ```
 
