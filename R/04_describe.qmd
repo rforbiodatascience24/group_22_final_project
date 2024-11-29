@@ -15,47 +15,53 @@ library(gt)
 library(gridExtra)
 ```
 
-## Description
+## Description of the dataset
 
 ```{r}
 # Number of rows and columns in the dataset 
-print(nrow(merged_data))
-print(ncol(merged_data))
+print(paste("Number of rows in dataset:", nrow(merged_data)))
+print(paste("Number of columns in dataset:",ncol(merged_data)))
+print(paste("Number of genes in Cohort:",ncol(tidy_genes)-1))
 ```
 
 ## Creating a summary table
 
 ```{r}
-# Making a summary table
+#Making a summary table
 summary_table_merged_data <- merged_data |> 
   group_by(status) |> 
   summarise(
-    `count` = n(),
-    `Age in years median (range)` = paste0(median(age_years),                                  # Calculating the median and range of age
+    `Mothers in Cohort` = n(),
+    `Age in years median (range)` = paste0(median(age_years),                                  #Calculating the median and range of age
                                             " (", min(age_years),
                                             "-", max(age_years), 
                                             ")"),
-    `Maternal BMI mean (range)` = paste0(round(mean(maternal_bmi), 1),                         # Calculating the median and range of BMI
+    `Maternal BMI mean (range)` = paste0(round(mean(maternal_bmi), 1),                         #Calculating the median and range of BMI
                                            " (", min(maternal_bmi), 
                                            "-", max(maternal_bmi), 
                                            ")"),
-    `Parity mean` = paste0(round(mean(parity), 1)),                                            # Calculating the mean of parity
-    `Gestational Age in weeks median (range)` = paste0(median(gestational_age_weeks),          # Calculating the mean and range of GA
+    `Parity mean` = paste0(round(mean(parity), 1)),                                            #Calculating the mean of parity
+    `Gestational Age in weeks median (range)` = paste0(median(gestational_age_weeks),          #Calculating the mean and range of GA
                                                         " (", min(gestational_age_weeks),     
                                                         "-", max(gestational_age_weeks), 
                                                         ")")
   )
-# Transposing the table
-summary_table <- t(summary_table_merged_data)
+#Transposing the table and removing the "status" row
+summary_table <- as.data.frame(t(summary_table_merged_data))
+summary_table <- summary_table[-1, ]
+
+#Remaing the columns
+colnames(summary_table) <- c("non-smoker", "smoker")
+
+
+# Ensuring that the final table looks right
 print(summary_table)
 
-# Now we want to count how many genes there are, and add this to the table
-summary_table <- merged_data |>
-  mutate("Number of genes" = select(starts_with("ilmn")) |> #Selecting all columns that start with "ILMN"
-  ncol()
-
-print(summary_table)
+# Saving the table af a .csv file in results folder
+write.csv(summary_table, file = "../results/description_table.csv", row.names = TRUE)
 ```
+
+## Box-plot over Age Filled by Smoker Status
 
 ```{r}
 bp_age <- merged_data |>
@@ -84,6 +90,8 @@ ggsave("../results/plots/description_age_boxplot.png")
 
 ```
 
+## Box-plot over Maternal BMI Filled by Smoker Status
+
 ```{r}
 bp_maternal_bmi <- merged_data |>
   ggplot(aes(x = status, y = maternal_bmi, fill = status)) +
@@ -110,6 +118,8 @@ ggsave("../results/plots/description_maternal_bmi_boxplot.png")
   
 ```
 
+## Box-plot over Placental Volume in cm3 filled by smoker status
+
 ```{r}
 bp_placental_volume <- merged_data |>
   ggplot(aes(x = status, y = placental_volume_cm3, fill = status)) +
@@ -135,29 +145,35 @@ ggsave("../results/plots/description_placental_volume_boxplot.png")
 
 ```
 
+## Combined plot: Correlation Between Smoker Status and Maternal Characterictics
+
 ```{r}
-(bp_placental_volume + theme(legend.position = "none") + 
+combined_plot1 <- (bp_placental_volume + theme(legend.position = "none") + 
      (bp_maternal_bmi + theme(legend.position = "none")
       )) / bp_age + 
      
-     plot_annotation(title = "Comparison by Smoking Status",
-                     caption = "Data from NCBI (2009)",
-                     theme = theme(legend.position = "topright",
-                                   plot.title = element_text(size = 10,
-                                                             hjust = 0.5, 
-                                                             face = "bold", 
-                                                             margin = margin(0,0,0,0),
-                                                             color = "black"),
-                                   plot.margin=grid::unit(c(t = 0, r = 0, b = 0, l = -1.3), "mm"))) +
+     plot_annotation(
+       title = "Comparison by Smoking Status",
+       caption = "Data from NCBI (2009)",
+        ) &
+  theme(
+    legend.position = "topright",
+    plot.title = element_text(size = 10, 
+                              hjust = 0.5, 
+                              face = "bold", 
+                              margin = margin(0, 0, 0, 0), 
+                              color = "black"),
+    plot.margin = grid::unit(c(0, 0, 0, -1.3), "mm")
+  ) +
   plot_layout(guides = "collect", heights = unit(c(1.35, 2.35), c('cm', 'cm')))
 ggsave("../results/plots/description_combined_plot1.png")
 combined_plot1
-
 ```
 
-```{r}
+## Heatmap?? Skal nok slettes
 
-# Subset numeric columns (e.g., ilmn columns)
+```{r}
+# Selecting gene columns
 gene_data <- merged_data |>
   select(starts_with("ilmn_"))
 
@@ -166,6 +182,8 @@ heatmap(as.matrix(gene_data), scale = "row",
 
 ```
 
+Ved ikke hvad det her plot kan bruges til, emn vi kunne godt lave noget lignende.
+
 ```{r}
 ggplot(merged_data, aes(x = mode_of_delivery, y = maternal_bmi, fill = mode_of_delivery)) +
   geom_violin(trim = FALSE) +
@@ -173,11 +191,12 @@ ggplot(merged_data, aes(x = mode_of_delivery, y = maternal_bmi, fill = mode_of_d
   theme_minimal()
 ```
 
-## Correlation between BMI_class and smokers
+## Correlation between BMI Class and Smoker Status
 
 ```{r}
 bp_bmi_classs_status <- merged_data |>
-  ggplot(aes(x = bmi_class, fill = status)) +
+  ggplot(aes(x = bmi_class, 
+             fill = status)) +
   geom_bar() +
   labs(
     x = "BMI Class",
@@ -192,9 +211,13 @@ bp_bmi_classs_status <- merged_data |>
       plot.background = element_rect(fill = "white"),
       panel.grid.major = element_line(color = "gray90"),
       panel.grid.minor = element_blank(),
-      axis.text = element_text(size = 5, color = "black"),
-      axis.title = element_text(size = 7, color = "black"),
-      plot.title = element_text(size = 7, face = "bold", color = "black"))
+      axis.text = element_text(size = 8, 
+                               color = "black"),
+      axis.title = element_text(size = 8, 
+                                color = "black"),
+      plot.title = element_text(size = 8, 
+                                face = "bold", 
+                                color = "black"))
 
 ggsave("../results/plots/description_bmi_class_boxplot.png")
 
