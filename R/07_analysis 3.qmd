@@ -4,13 +4,11 @@ format: html
 editor: visual
 ---
 
-## Linear regression for genes associated with smoking 
-
+## Linear regression for genes associated with smoking
 
 ### Error bar plot and Volcano plot
 
 ### Error bar plot and Vulcano plot (q value)
-
 
 ```{r}
 #| message: false
@@ -197,7 +195,8 @@ volcono_plot_q <- merged_estimates |>
 
 volcono_plot_q
 ```
-<<<<<<< HEAD
+
+\<\<\<\<\<\<\< HEAD
 
 Since no significant q-values were found, we decided to look at significant p-values instead.
 
@@ -405,4 +404,3 @@ volcano_plot <- merged_estimates_p |>
 
 volcano_plot
 ```
-
