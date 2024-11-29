@@ -4,16 +4,18 @@ format: html
 editor: visual
 ---
 
-## Linear regression for genes associated with smoking
+## Linear regression for genes associated with smoking 
 
+<<<<<<< HEAD
 ### Error bar plot and Volcano plot
+=======
+### Error bar plot and Vulcano plot (q value)
+>>>>>>> 625bf22dc68681d6d594ba6e29a050a2aba4bf20
 
 ```{r}
 #| message: false
 library(tidyverse)
 library(broom)
-library(patchwork)
-library("ggrepel")
 ```
 
 #### Creating a table with status, gene names and log2 expression levels
@@ -26,7 +28,7 @@ merged_clean_aug_long <- merged_clean_aug |>
                names_to = "gene",                                 #Making a new column to store the gene names
                values_to = "expr_level"                           #Making a new column to store the corresponding expression levels in
                ) |> 
-  mutate(log2_expr = log2(expr_level))                            
+  mutate(log2_expr = log2(expr_level))                            #
 
 merged_clean_aug_long <- merged_clean_aug_long |> 
   select(status_num,gene,log2_expr)
@@ -49,7 +51,6 @@ merged_clean_aug_long_nested
 ```
 
 ```{r}
-# Checking how it looks for one gene
 merged_clean_aug_long_nested |>
   filter(gene == "ilmn_1343291") |> 
   pull(data)
@@ -66,12 +67,24 @@ merged_clean_aug_long_nested <- merged_clean_aug_long_nested |>
 merged_clean_aug_long_nested
 ```
 
+### Maybe delete?
+
 ```{r}
-# Looking at one gene
 merged_clean_aug_long_nested |>
+  
+  # Here, you should replace "g2E09" with whatever was YOUR favourite gene!
   filter(gene == "ilmn_1343293") |> 
+  
+  # Pull() on tibbles: This pulls out the model_object variable.
+  #   Note! This is a list, because we nested!
   pull(model_object) |> 
+  
+  # Pluck() on lists: From the list we got from the last step,
+  #   we "pluck" the first element
   pluck(1) |>
+  
+  # The result of pluck, is a model object,
+  #   upon which we can call the tidy function
   tidy(conf.int = TRUE,
        conf.level = 0.95)
 ```
@@ -130,10 +143,6 @@ merged_estimates |>
   select(gene, p.value, q.value)
 ```
 
-Here we see, that no significant q-values has been found.
-
-Plotting all values (even though they are not significant):
-
 ```{r}
 merged_estimates |> 
   filter(is_significant == "no") |> 
@@ -188,6 +197,7 @@ volcono_plot_q <- merged_estimates |>
 
 volcono_plot_q
 ```
+<<<<<<< HEAD
 
 Since no significant q-values were found, we decided to look at significant p-values instead.
 
@@ -395,3 +405,5 @@ volcano_plot <- merged_estimates_p |>
 
 volcano_plot
 ```
+=======
+>>>>>>> 625bf22dc68681d6d594ba6e29a050a2aba4bf20
