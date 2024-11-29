@@ -262,50 +262,63 @@ Therefore, we selected three genes to represent the three different clusters. Ne
 lr_ilmn_1651278 <- merged_clean_aug_long |>
   filter(gene == "ilmn_1651278") |>  
   ggplot(aes(x = status_num, 
-             y = log2_expr)) +
+             y = log2_expr,
+             color = factor(status_num))) +
   geom_point(alpha = 0.6) +  
   geom_smooth(method = "lm", 
               se = TRUE, 
-              color = "#63B8B8") +  
+              color = "black") +  
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
   labs(x = "Status",
-    y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651278")
+       y = "Log2 Expr. level",
+       title = "Probe_ID: ilmn_1651278",
+       color = "Smoking Status") +  # Set legend title
+  scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
+                     labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels
+  
 
 lr_ilmn_1651375 <- merged_clean_aug_long |>
   filter(gene == "ilmn_1651375") |>  
   ggplot(aes(x = status_num, 
-             y = log2_expr)) +
+             y = log2_expr,
+             color = factor(status_num))) +
   geom_point(alpha = 0.6) +  
   geom_smooth(method = "lm", 
               se = TRUE, 
-              color = "#63B8B8") +  
+              color = "black") +  
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
   labs(x = "Status",
     y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651375")
+    title = "Probe_ID: ilmn_1651375",
+    color = "Smoking Status") +  # Set legend title
+  scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
+                     labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels)
+
 
 lr_ilmn_1651767 <- merged_clean_aug_long |>
   filter(gene == "ilmn_1651767") |>  
   ggplot(aes(x = status_num, 
-             y = log2_expr)) +
+             y = log2_expr,
+             color=factor(status_num))) +
   geom_point(alpha = 0.6) +  
   geom_smooth(method = "lm", 
-              se = TRUE, 
-              color = "#63B8B8") +  
+              se = TRUE,
+              color = "black") +  
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
  labs(x = "Status",
     y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651767")
+    title = "Probe_ID: ilmn_1651767",
+    color = "Smoking Status") +  # Set legend title
+  scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
+                     labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels))
 
-#linear_regression_plot <- lr_ilmn_1651278 / lr_ilmn_1651375 / lr_ilmn_1651767
-
+  
 linear_regression_plot <- lr_ilmn_1651278 / lr_ilmn_1651375 / lr_ilmn_1651767 + 
   plot_layout(guides = "collect", 
-              heights = c(5, 5, 5),  # Adjust row heights
+              heights = c(5, 5, 5),   # Adjust row heights
               design = "A
                           B
                           C") +    # Designates the layout for each plot
