@@ -4,7 +4,9 @@ format: html
 editor: visual
 ---
 
-## Genes associated with smoking - Error bar plot
+## Linear regression for genes associated with smoking 
+
+### Error bar plot and Vulcano plot (q value)
 
 ```{r}
 library(tidyverse)
