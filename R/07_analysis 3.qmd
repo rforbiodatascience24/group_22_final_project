@@ -6,7 +6,7 @@ editor: visual
 
 ## Linear regression for genes associated with smoking
 
-### Error bar plot and Vulcano plot (q value)
+### Error bar plot and Volcano plot (q value)
 
 ```{r}
 #| message: false
