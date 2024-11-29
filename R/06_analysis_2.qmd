@@ -41,6 +41,10 @@ significant_genes_count <- merged_log2_fold |>
   filter(p_value < 0.05) |>
   summarise(count = n())
 
+significant_genes_count <- merged_log2_fold |>
+  filter(Significance == 'Significant') |>
+  summarise(count = n())
+
 print(significant_genes_count)
 ```
 
