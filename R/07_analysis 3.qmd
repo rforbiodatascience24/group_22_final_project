@@ -6,6 +6,11 @@ editor: visual
 
 ## Genes associated with smoking - Error bar plot
 
+```{r}
+library(tidyverse)
+library(broom)
+```
+
 #### Creating a table with status, gene names and log2 expression levels
 
 ```{r}
