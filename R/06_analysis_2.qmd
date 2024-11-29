@@ -17,7 +17,7 @@ gene_cols <- grep("^ilmn",
 
 merged_log2_fold <- merged_data |> 
   group_by(status) |> 
-  summarise(across(all_of(gene_cols), mean, na.nr = TRUE)) |> 
+  summarise(across(all_of(gene_cols), mean, na.rm = TRUE)) |> 
   pivot_longer(cols = -status,
                names_to = "gene",
                values_to = "mean_expr") |> 
