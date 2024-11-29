@@ -4,8 +4,6 @@ format: html
 editor: visual
 ---
 
-TO BE DELETED
-
 # Linear regression for genes associated with smoking
 
 ## Error bar plot and Vulcano plot (p-value)
@@ -125,7 +123,7 @@ merged_estimates <- merged_estimates |>
 merged_estimates
 ```
 
-#### Finding genes with a significant p-value (p\<0.05)
+#### Finding for genes with a significant p-value (p\<0.05)
 
 ```{r}
 merged_estimates |>

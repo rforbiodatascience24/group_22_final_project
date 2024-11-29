@@ -7,7 +7,6 @@ editor: visual
 ### Loading required libraries
 
 ```{r}
-#| message: false
 library(tidyverse)
 ```
 

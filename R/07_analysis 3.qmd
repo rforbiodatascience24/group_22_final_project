@@ -4,15 +4,13 @@ format: html
 editor: visual
 ---
 
-## Linear regression for genes associated with smoking
+## Linear regression for genes associated with smoking 
 
-### Error bar plot and Vulcano plot
+### Error bar plot and Vulcano plot (q value)
 
 ```{r}
 library(tidyverse)
 library(broom)
-library(patchwork)
-library("ggrepel")
 ```
 
 #### Creating a table with status, gene names and log2 expression levels
@@ -25,7 +23,7 @@ merged_clean_aug_long <- merged_clean_aug |>
                names_to = "gene",                                 #Making a new column to store the gene names
                values_to = "expr_level"                           #Making a new column to store the corresponding expression levels in
                ) |> 
-  mutate(log2_expr = log2(expr_level))                            
+  mutate(log2_expr = log2(expr_level))                            #
 
 merged_clean_aug_long <- merged_clean_aug_long |> 
   select(status_num,gene,log2_expr)
@@ -48,7 +46,6 @@ merged_clean_aug_long_nested
 ```
 
 ```{r}
-# Checking how it looks for one gene
 merged_clean_aug_long_nested |>
   filter(gene == "ilmn_1343291") |> 
   pull(data)
@@ -65,12 +62,24 @@ merged_clean_aug_long_nested <- merged_clean_aug_long_nested |>
 merged_clean_aug_long_nested
 ```
 
+### Maybe delete?
+
 ```{r}
-# Looking at one gene
 merged_clean_aug_long_nested |>
+  
+  # Here, you should replace "g2E09" with whatever was YOUR favourite gene!
   filter(gene == "ilmn_1343293") |> 
+  
+  # Pull() on tibbles: This pulls out the model_object variable.
+  #   Note! This is a list, because we nested!
   pull(model_object) |> 
+  
+  # Pluck() on lists: From the list we got from the last step,
+  #   we "pluck" the first element
   pluck(1) |>
+  
+  # The result of pluck, is a model object,
+  #   upon which we can call the tidy function
   tidy(conf.int = TRUE,
        conf.level = 0.95)
 ```
@@ -129,10 +138,6 @@ merged_estimates |>
   select(gene, p.value, q.value)
 ```
 
-Here we see, that no significant q-values has been found.
-
-Plotting all values (even though they are not significant):
-
 ```{r}
 merged_estimates |> 
   filter(is_significant == "no") |> 
@@ -183,211 +188,4 @@ pl <- merged_estimates |>
     caption = "Data from DOI: ???")
 
 pl
-```
-
-Since no significant q-values were found, we decided to look at significant p-values instead.
-
-## Significant p-values
-
-```{r}
-# Changed from looking at significant q-value in 07_analysis to looking at significant p-values
-merged_estimates_p <- merged_estimates |> 
-  mutate(q.value = p.adjust(p.value),
-         is_significant = case_when(p.value <= 0.05 ~ "yes", # obs p-value
-                                    p.value > 0.05 ~ "no"))
-
-merged_estimates_p
-```
-
-#### Sorting for genes with a significant p-value (p\<0.05)
-
-```{r}
-merged_estimates_p |>
-  filter(is_significant == "yes") |> 
-  select(gene, p.value, q.value)
-```
-
-### Error bar plot for all genes with a significant p-value
-
-```{r}
-merged_estimates_p |> 
-  filter(is_significant == "yes") |> 
-  ggplot(aes(x = estimate,
-             y = fct_reorder(gene, estimate),
-             xmin = conf.low,
-             xmax = conf.high)) +
-  geom_vline(xintercept = 0) +
-  geom_errorbarh() +
-  geom_point() +
-  theme_minimal(base_size = 16) +
-  theme(plot.title = element_text(hjust = 1, size = 11),
-        axis.title = element_text(size = 10),
-        axis.text = element_text(size = 5),
-        plot.caption = element_text(size = 7)) +
-  labs(x = "Estimates (95%CIs)",
-       y = "",
-       title = "Genes Associated with Smoking",
-       caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
-```
-
-It is clear that all significant genes are divided into 3 clusters:
-
--   a ≈ 0.22
-
--   a ≈ 0.15
-
--   a ≈ -0.11
-
-This can also be concluded when looking at the numeric values for estimates for all significant genes:
-
-```{r}
-merged_estimates_p |> 
-  filter(is_significant == "yes")
-```
-
-Therefore, we selected three genes to represent the three different clusters. Next, we will plot the linear regressions for these genes.
-
-### Linear regression for 3 genes
-
-```{r}
-# Looking at the linear regressions for three probe_IDs representing each of the 3 different estimated
-lr_ilmn_1651278 <- merged_clean_aug_long |>
-  filter(gene == "ilmn_1651278") |>  
-  ggplot(aes(x = status_num, 
-             y = log2_expr)) +
-  geom_point(alpha = 0.6) +  
-  geom_smooth(method = "lm", 
-              se = TRUE, 
-              color = "#63B8B8") +  
-  theme_minimal(base_size = 12) +
-  theme(plot.caption = element_text(size = 8)) +
-  labs(x = "Status",
-    y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651278")
-
-lr_ilmn_1651375 <- merged_clean_aug_long |>
-  filter(gene == "ilmn_1651375") |>  
-  ggplot(aes(x = status_num, 
-             y = log2_expr)) +
-  geom_point(alpha = 0.6) +  
-  geom_smooth(method = "lm", 
-              se = TRUE, 
-              color = "#63B8B8") +  
-  theme_minimal(base_size = 12) +
-  theme(plot.caption = element_text(size = 8)) +
-  labs(x = "Status",
-    y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651375")
-
-lr_ilmn_1651767 <- merged_clean_aug_long |>
-  filter(gene == "ilmn_1651767") |>  
-  ggplot(aes(x = status_num, 
-             y = log2_expr)) +
-  geom_point(alpha = 0.6) +  
-  geom_smooth(method = "lm", 
-              se = TRUE, 
-              color = "#63B8B8") +  
-  theme_minimal(base_size = 12) +
-  theme(plot.caption = element_text(size = 8)) +
- labs(x = "Status",
-    y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651767")
-
-#linear_regression_plot <- lr_ilmn_1651278 / lr_ilmn_1651375 / lr_ilmn_1651767
-
-linear_regression_plot <- lr_ilmn_1651278 / lr_ilmn_1651375 / lr_ilmn_1651767 + 
-  plot_layout(guides = "collect", 
-              heights = c(5, 5, 5),  # Adjust row heights
-              design = "A
-                          B
-                          C") +    # Designates the layout for each plot
-  plot_annotation(
-    title = "Linear Regression of Gene Expression Levels",
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  )
-
-
-linear_regression_plot
-
-ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, height = 15, width = 8, units = "in")
-```
-
-### Error bar plot for three genes
-
-```{r}
-merged_estimates_p |> 
-  filter(gene %in% c("ilmn_1651278", "ilmn_1651375", "ilmn_1651767")) |> 
-  ggplot(aes(x = estimate,
-             y = fct_reorder(gene, estimate),
-             xmin = conf.low,
-             xmax = conf.high)) +
-  geom_vline(xintercept = 0) +
-  geom_errorbarh() +
-  geom_point() +
-  theme_minimal(base_size = 16) +
-  theme(plot.title = element_text(hjust = 1, size = 11),
-        axis.title = element_text(size = 10),
-        axis.text = element_text(size = 5),
-        plot.caption = element_text(size = 7)) +
-  labs(x = "Estimates (95%CIs)",
-       y = "",
-       title = "Genes Associated with Smoking",
-       caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
-```
-
-### Error bar plot for 30 random significant genes (p\<0.05)
-
-```{r}
-merged_estimates_p |> 
-  filter(is_significant == "yes") |> 
-  sample_n(30) |> 
-  ggplot(aes(x = estimate,
-             y = fct_reorder(gene, estimate),
-             xmin = conf.low,
-             xmax = conf.high)) +
-  geom_vline(xintercept = 0) +
-  geom_errorbarh() +
-  geom_point() +
-  theme_minimal(base_size = 16) +
-  theme(plot.title = element_text(hjust = 1, size = 11),
-        axis.title = element_text(size = 10),
-        axis.text = element_text(size = 5),
-        plot.caption = element_text(size = 7)) +
-  labs(x = "Estimates (95%CIs)",
-       y = "",
-       title = "Genes Associated with Smoking",
-       caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
-```
-
-### Vulcano plot
-
-```{r}
-vulcano_plot <- merged_estimates_p |>
-  mutate(lbl = case_when(
-    is_significant == "yes" ~ gene,
-    is_significant == "no" ~ "")) |> 
-  ggplot(aes(x = estimate,
-             y = -log10(p.value),
-             colour = is_significant,
-             label = lbl)) +
-  geom_point(size = 1,
-             alpha = 0.5) +
-  geom_text_repel(size = 4,
-                  max.overlaps = 20) +
-  geom_hline(yintercept = 0) +
-  theme_minimal(base_size = 10) +
-  theme(
-    plot.title = element_text(hjust = 1),
-    plot.subtitle = element_text(hjust = 1),
-    legend.position = "none",
-    plot.caption = element_text(size = 6)  # Set smaller caption size here
-  ) +
-  labs(
-    x = "Estimates",
-    y = "-log10(p)",
-    title = "Vulcano plot for down/up regulated genes with significance p< 0.05",
-    subtitle = "Genes highlighted in turquoise had a significant p-value",
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
-
-vulcano_plot
 ```
