@@ -17,7 +17,7 @@ gene_cols <- grep("^ilmn",
 
 merged_log2_fold <- merged_data |> 
   group_by(status) |> 
-  summarise(across(all_of(gene_cols), mean, na.nr = TRUE)) |> 
+  summarise(across(all_of(gene_cols), mean, na.rm = TRUE)) |> 
   pivot_longer(cols = -status,
                names_to = "gene",
                values_to = "mean_expr") |> 
@@ -39,6 +39,10 @@ print(merged_log2_fold)
 # Count how many p-values are under 0.05 and thereby significant different
 significant_genes_count <- merged_log2_fold |>
   filter(p_value < 0.05) |>
+  summarise(count = n())
+
+significant_genes_count <- merged_log2_fold |>
+  filter(Significance == 'Significant') |>
   summarise(count = n())
 
 print(significant_genes_count)
