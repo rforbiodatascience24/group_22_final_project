@@ -11,38 +11,9 @@ library(dplyr)
 ```
 
 ```{r}
-gene_cols <- grep("^ilmn",
-                  names(merged_data),
-                  value = TRUE)
-
-merged_log2_fold <- merged_data |> 
-  group_by(status) |> 
-  summarise(across(all_of(gene_cols), mean, na.rm = TRUE)) |> 
-  pivot_longer(cols = -status,
-               names_to = "gene",
-               values_to = "mean_expr") |> 
-  pivot_wider(names_from = status, 
-              values_from = mean_expr) |> 
-  mutate(log2_fold_change = log2(`smoker` / `non-smoker`))
-
-
-p_values <- merged_data |>
-  pivot_longer(cols = all_of(gene_cols), names_to = "gene", values_to = "expression") |>
-  group_by(gene) |> 
-  summarise(p_value = t.test(expression ~ status)$p.value)
-
-merged_log2_fold <- merged_log2_fold |> 
-  left_join(p_values, by = "gene")
-
-print(merged_log2_fold)
-
-# Count how many p-values are under 0.05 and thereby significant different
+# Count how many p-values are under 0.05 and thereby significantly different
 significant_genes_count <- merged_log2_fold |>
   filter(p_value < 0.05) |>
-  summarise(count = n())
-
-significant_genes_count <- merged_log2_fold |>
-  filter(Significance == 'Significant') |>
   summarise(count = n())
 
 print(significant_genes_count)
@@ -51,9 +22,8 @@ print(significant_genes_count)
 ```{r}
 ggplot(merged_log2_fold, aes(x = log2_fold_change, y = -log10(p_value))) +
   geom_point() +
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "#F9A1A1") +
   labs(x = "Log2 Fold Change", y = "-log10(p-value)", title = "Volcano Plot")
-
 ```
 
 ### Plot of up- and downregulated genes in smokers
@@ -74,36 +44,11 @@ merged_log2_fold
 ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_change, fill = Regulation)) +
   geom_bar(stat = "identity", width = 0.8) + 
   coord_flip() +  # Flip coordinates so the plot is more interpretable 
-  scale_fill_manual(values = c("Upregulated" = "blue", "Downregulated" = "red")) +
+  scale_fill_manual(values = c("Upregulated" = "#63B8B8", "Downregulated" = "#F9A1A1")) +
   labs(title = "Upregulated vs. Downregulated Genes in Smokers",
        x = "Genes",
        y = "Log2-Fold Change") +
   theme_minimal() +
   theme(axis.text.y = element_blank(),  # Removing y-axis gene labels
         plot.title = element_text(hjust = 0.5))
-```
-
-## Extract the top 30 genes with the largest absolute log2_fold_change
-
-```{r}
-top_genes <- merged_log2_fold |>
-  #filter(p_value < 0.05) |>  #Extracting only genes with significant log2 fold change 
-  mutate(abs_log2_fold_change = abs(log2_fold_change)) |> 
-  arrange(desc(abs_log2_fold_change)) |>
-  slice_head(n = 100) |>
-  select(-abs_log2_fold_change) 
-
-print(top_genes)
-
-```
-
-### Heat map of the significant genes
-
-```{r}
-# Filter significant genes based on p-value
-significant_genes <- merged_log2_fold |> 
-  filter(p_value < 0.05) |> 
-  select(gene, log2_fold_change)
-
-significant_genes
 ```
