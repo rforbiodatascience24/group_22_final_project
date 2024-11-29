@@ -4,13 +4,13 @@ format: html
 editor: visual
 ---
 
-## Loading Required Libraries
+### Loading required libraries
 
 ```{r}
 library(tidyverse)
 ```
 
-## Extracting Sample IDs
+### Extracting sample IDs
 
 ```{r}
 # Inspecting the dataset to locate where the sample ID's are
@@ -21,7 +21,7 @@ sample_ids <- as.character(sample_id_row)                           # Transformi
 print(sample_ids)
 ```
 
-## Extracting and Filtering Relevant Data
+### Extracting and filtering relevant data
 
 ```{r}
 # Extracting patient characteristics data
@@ -40,7 +40,7 @@ print(head(ncbi_characteristics_dirty))
 print(head(ncbi_genes_dirty))
 ```
 
-## Tidying Patient Characteristics Data
+### Tidying patient characteristics data
 
 ```{r}
 # Transpose and tidy the characteristics data
@@ -69,7 +69,7 @@ print(head(tidy_characteristics))
 
 ```
 
-## Tidying Gene Expression Data
+### Tidying gene expression data
 
 ```{r}
 # Transposing and tidying the gene expression data
@@ -92,7 +92,7 @@ tidy_genes <- tidy_genes |>
 print(head(tidy_genes))
 ```
 
-## Cleaning Column Names
+### Cleaning column names
 
 ```{r}
 # Standardizing column names for characteristics data 
@@ -114,7 +114,7 @@ print(colnames(tidy_characteristics))
 print(colnames(tidy_genes))
 ```
 
-## Merging Patient Characteristics and Gene Expression Data
+### Merging patient characteristics and gene expression data
 
 ```{r}
 # Merge the two datasets by `sample_id`
@@ -137,7 +137,7 @@ print(head(merged_data))
 
 ```
 
-## Saving the final merged data to a tsv file
+### Saving the final merged data to a tsv file
 
 ```{r}
 # Save the merged dataset to a tsv file
