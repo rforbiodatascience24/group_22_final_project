@@ -1,12 +1,14 @@
 ---
-title: "07_analysis 3"
+title: "08_analysis_4"
 format: html
 editor: visual
 ---
 
-## Linear regression for genes associated with smoking 
+# Linear regression for genes associated with smoking
 
-### Error bar plot and Vulcano plot (q value)
+## Error bar plot and Vulcano plot
+
+Since no significant q-values were found in 07_analysis_3, we decided to look at significant p-values instead.
 
 ```{r}
 library(tidyverse)
@@ -119,13 +121,13 @@ merged_estimates[cols_to_convert] <- lapply(merged_estimates[cols_to_convert],
 merged_estimates
 ```
 
-#### Finding q-value and determining if the results are significant
+#### Finding p-value and determining if the results are significant
 
 ```{r}
 merged_estimates <- merged_estimates |> 
   mutate(q.value = p.adjust(p.value),
-         is_significant = case_when(q.value <= 0.05 ~ "yes",
-                                    q.value > 0.05 ~ "no"))
+         is_significant = case_when(p.value <= 0.05 ~ "yes",
+                                    p.value > 0.05 ~ "no"))
 
 merged_estimates
 ```
@@ -140,7 +142,7 @@ merged_estimates |>
 
 ```{r}
 merged_estimates |> 
-  filter(is_significant == "no") |> 
+  filter(is_significant == "yes") |> 
   ggplot(aes(x = estimate,
              y = fct_reorder(gene, estimate),
              xmin = conf.low,
@@ -158,7 +160,55 @@ merged_estimates |>
        title = "Genes Associated with Smoking")
 ```
 
-### Plotting of genes which are significant/not significant
+All significant values
+
+```{r}
+merged_estimates |> 
+  filter(is_significant == "yes")
+```
+
+```{r}
+merged_estimates |> 
+  filter(gene %in% c("ilmn_1651278", "ilmn_1651375", "ilmn_1651767")) |> 
+  ggplot(aes(x = estimate,
+             y = fct_reorder(gene, estimate),
+             xmin = conf.low,
+             xmax = conf.high)) +
+  geom_vline(xintercept = 0) +
+  geom_errorbarh() +
+  geom_point() +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = 1, size = 11),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 5),
+        plot.caption = element_text(size = 7)) +
+  labs(x = "Estimates (95%CIs)",
+       y = "",
+       title = "Genes Associated with Smoking")
+```
+
+```{r}
+merged_estimates |> 
+  filter(is_significant == "yes") |> 
+  sample_n(30) |> 
+  ggplot(aes(x = estimate,
+             y = fct_reorder(gene, estimate),
+             xmin = conf.low,
+             xmax = conf.high)) +
+  geom_vline(xintercept = 0) +
+  geom_errorbarh() +
+  geom_point() +
+  theme_minimal(base_size = 16) +
+  theme(plot.title = element_text(hjust = 1, size = 11),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 5),
+        plot.caption = element_text(size = 7)) +
+  labs(x = "Estimates (95%CIs)",
+       y = "",
+       title = "Genes Associated with Smoking")
+```
+
+### Vulcano plot - Plotting of genes which are significant/not significant
 
 ```{r}
 library("ggrepel")

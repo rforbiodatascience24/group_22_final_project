@@ -31,8 +31,7 @@ merged_data <- merged_data |>
                                        "Obesity class II", 
                                        "Obesity class III"))) |>
   relocate(bmi_class,
-           .after = maternal_bmi)
-#Ensuring that the column is added the correct place and divided as we want. We still want to keep maternal_bmi.
+           .after = maternal_bmi) #Moving the column bmi_class to the correct place and divided as we want. 
 print(head(merged_data))
 ```
 
@@ -40,7 +39,7 @@ print(head(merged_data))
 
 ```{r}
 merged_data <- merged_data |> 
-  # Adding an age_group column and telling how the age_group should be divided. 
+  # Dividing the different patients into age_groups (10,20], (20,30], (30,40], (40,50]
   mutate(age_group = cut(age_years,
                          breaks = c(10,
                                     20,
@@ -48,7 +47,7 @@ merged_data <- merged_data |>
                                     40,
                                     50))) |>
   relocate(age_group,
-           .after = age_years) #Adding age_group after age_years
+           .after = age_years) #Adding age_group column after age_years column
 # Checking the classes are divided correctly and age_group is placed after age_years
 print(head(merged_data))
 ```
@@ -66,4 +65,38 @@ merged_clean_aug <- merged_data |>
 merged_clean_aug
 ```
 
-### 
+### Creating table with log2-fold-change and p-values
+
+```{r}
+# Extract genedata from merged_data
+gene_cols <- grep("^ilmn",
+                  names(merged_data),
+                  value = TRUE)
+
+merged_log2_fold <- merged_data |>
+  group_by(status) |> 
+  # Calculate the mean value for expression levels, for each gene, divided into smoker and non-smoker
+  summarise(across(all_of(gene_cols),
+                   mean, na.rm = TRUE)) |> 
+  pivot_longer(cols = -status,
+               names_to = "gene",
+               values_to = "mean_expr") |> 
+  pivot_wider(names_from = status, 
+  #Calculate the log2_fold_change for each gene             
+              values_from = mean_expr) |> 
+  mutate(log2_fold_change = log2(`smoker` / `non-smoker`))
+ 
+p_values <- merged_data |>
+  pivot_longer(cols = all_of(gene_cols),
+               names_to = "gene",
+               values_to = "expression") |>
+  #Calculate the p-value for each gene 
+  group_by(gene) |> 
+  summarise(p_value = t.test(expression ~ status)$p.value)
+
+#Combine log2_fold_values and p-values into table 
+merged_log2_fold <- merged_log2_fold |> 
+  left_join(p_values, by = "gene")
+
+print(merged_log2_fold)
+```

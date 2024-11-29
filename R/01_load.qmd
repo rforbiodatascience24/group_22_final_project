@@ -50,6 +50,7 @@ annotation_data <- read_bgx_file(raw_dir, "raw_annotation.bgx.gz")
 
 ncbi_data
 annotation_data
+annotation_data$probes
 ```
 
 ### Write files
@@ -60,6 +61,6 @@ The files that we have just loaded above should be written to a tsv file in our 
 write_tsv(ncbi_data,
             file = "../data/01_ncbi_data.tsv.gz")
 
-write_tsv(annotation_data,
+write_tsv(annotation_data$probes,
             file = "../data/01_ncbi_annot_probes.tsv.gz")
 ```
