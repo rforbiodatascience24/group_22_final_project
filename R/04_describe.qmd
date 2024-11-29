@@ -72,9 +72,7 @@ bp_age <- merged_data |>
   labs(
     x = "Status",
     y = "Age (years)",
-    title = "Boxplot of Age by Smoking Status",
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  ) +
+    title = "Boxplot of Age by Smoking Status") +
   scale_fill_manual(
       values = c("non-smoker" = "#F9A1A1", 
                  "smoker" = "#63B8B8")
@@ -108,9 +106,7 @@ bp_maternal_bmi <- merged_data |>
   labs(
     x = "Status",
     y = "Maternal BMI",
-    title = "Boxplot of Maternal BMI by Smoking Status",
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  ) +
+    title = "Boxplot of Maternal BMI by Smoking Status") +
   scale_fill_manual(
       values = c("non-smoker" = "#F9A1A1", 
                  "smoker" = "#63B8B8")
@@ -143,9 +139,7 @@ bp_placental_volume <- merged_data |>
   labs(
     x = "Status",
     y = "Placental volume in cm3",
-    title = "Boxplot of Placental Volume by Smoking Status", 
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  ) +
+    title = "Boxplot of Placental Volume by Smoking Status") +
   scale_fill_manual(
     values = c("non-smoker" = "#F9A1A1", 
                "smoker" = "#63B8B8")
@@ -194,6 +188,7 @@ combined_plot1 <- (bp_placental_volume + theme(legend.position = "none") +
               heights = unit(c(1.35, 2.35), 
                              c('cm', 'cm')))
 ggsave("../results/plots/description_combined_plot1.png")
+combined_plot1
 ```
 
 ## Correlation between BMI Class and Smoker Status
