@@ -98,10 +98,14 @@ merged_data <- ncbi_genes_dirty |>
 # View the resulting dataset
 print(head(merged_data))
 
+# Check for duplicates in the table
+duplicates <- merged_data |> 
+  group_by("col_1") |>  # Group by the gene column
+  filter(duplicated(across(-"col_1"))) |>  # Check for duplicates across other columns
+  ungroup()
 
-
-
-
+# Print the duplicates
+print(duplicates)
 ```
 
 ```{r}
@@ -110,10 +114,13 @@ tidy_genes <- merged_data |>
   pivot_longer(cols = -col_1,                  # everything but col1
                names_to = "Sample",
                values_to = "Expression") |> 
+  group_by(Sample, col_1) |>        # Ensure unique keys
   pivot_wider(names_from = col_1,             # col1 contains the genes
               values_from = Expression) |>    # all expression values
   mutate(Sample_ID = sample_ids[seq_len(n())]) |>   # adding the sample_IDs in a new column
-  relocate(Sample_ID)  # moving Sample_ID to the first column
+  relocate(Sample_ID)   # moving Sample_ID to the first column
+
+tidy_genes
 
 # Removing the sample column and dropping NAs
 tidy_genes <- tidy_genes |> 
@@ -137,7 +144,7 @@ tidy_genes <- ncbi_genes_dirty |>
               values_from = Expression) |>    # all expression values
   mutate(Sample_ID = sample_ids[seq_len(n())]) |>   # adding the sample_IDs in a new column
   relocate(Sample_ID)  # moving Sample_ID to the first column
-
+tidy_genes
 # Removing the sample column and dropping NAs
 tidy_genes <- tidy_genes |> 
   select(-Sample) |>   # selecting everything but the "Sample" column
