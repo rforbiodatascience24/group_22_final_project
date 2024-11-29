@@ -97,5 +97,4 @@ merged_log2_fold <- merged_log2_fold |>
   left_join(p_values, by = "gene")
 
 print(merged_log2_fold)
-
 ```
