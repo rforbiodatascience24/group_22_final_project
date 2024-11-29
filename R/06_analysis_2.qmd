@@ -44,6 +44,14 @@ significant_genes_count <- merged_log2_fold |>
 print(significant_genes_count)
 ```
 
+```{r}
+ggplot(merged_log2_fold, aes(x = log2_fold_change, y = -log10(p_value))) +
+  geom_point() +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") +
+  labs(x = "Log2 Fold Change", y = "-log10(p-value)", title = "Volcano Plot")
+
+```
+
 ### Plot of up- and downregulated genes in smokers
 
 ```{r}
@@ -71,15 +79,11 @@ ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_
         plot.title = element_text(hjust = 0.5))
 ```
 
-```{r}
-
-```
-
 ## Extract the top 30 genes with the largest absolute log2_fold_change
 
 ```{r}
 top_genes <- merged_log2_fold |>
-  filter(p_value < 0.05) |>  #Extracting only genes with significant log2 fold change 
+  #filter(p_value < 0.05) |>  #Extracting only genes with significant log2 fold change 
   mutate(abs_log2_fold_change = abs(log2_fold_change)) |> 
   arrange(desc(abs_log2_fold_change)) |>
   slice_head(n = 100) |>
