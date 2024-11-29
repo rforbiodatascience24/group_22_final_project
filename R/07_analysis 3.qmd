@@ -6,7 +6,7 @@ editor: visual
 
 ## Linear regression for genes associated with smoking
 
-### Error bar plot and Volcano plot (q value)
+### Forest plot and Volcano plot (q value)
 
 ```{r}
 #| message: false
@@ -215,7 +215,7 @@ merged_estimates_p |>
   select(gene, p.value, q.value)
 ```
 
-### Error bar plot for all genes with a significant p-value
+### Forest plot for all genes with a significant p-value
 
 ```{r}
 merged_estimates_p |> 
@@ -320,7 +320,7 @@ linear_regression_plot
 ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, height = 15, width = 8, units = "in")
 ```
 
-### Error bar plot for three genes
+### Forest plot for three genes
 
 ```{r}
 merged_estimates_p |> 
@@ -343,7 +343,7 @@ merged_estimates_p |>
        caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 ```
 
-### Error bar plot for 30 random significant genes (p\<0.05)
+### Forest plot for 30 random significant genes (p\<0.05)
 
 ```{r}
 merged_estimates_p |> 
