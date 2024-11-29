@@ -6,8 +6,6 @@ editor: visual
 
 ## Linear regression for genes associated with smoking
 
-### Error bar plot and Volcano plot
-
 ### Error bar plot and Vulcano plot (q value)
 
 ```{r}
@@ -65,12 +63,9 @@ merged_clean_aug_long_nested <- merged_clean_aug_long_nested |>
 merged_clean_aug_long_nested
 ```
 
-### Maybe delete?
-
 ```{r}
 merged_clean_aug_long_nested |>
   
-  # Here, you should replace "g2E09" with whatever was YOUR favourite gene!
   filter(gene == "ilmn_1343293") |> 
   
   # Pull() on tibbles: This pulls out the model_object variable.
@@ -141,6 +136,8 @@ merged_estimates |>
   select(gene, p.value, q.value)
 ```
 
+No significant q-values found. Plotting all estimates (even though they are not significant):
+
 ```{r}
 merged_estimates |> 
   filter(is_significant == "no") |> 
@@ -195,8 +192,6 @@ volcono_plot_q <- merged_estimates |>
 
 volcono_plot_q
 ```
-
-\<\<\<\<\<\<\< HEAD
 
 Since no significant q-values were found, we decided to look at significant p-values instead.
 
