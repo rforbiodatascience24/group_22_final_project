@@ -6,11 +6,11 @@ editor: visual
 
 ## Linear regression for genes associated with smoking 
 
-<<<<<<< HEAD
+
 ### Error bar plot and Volcano plot
-=======
+
 ### Error bar plot and Vulcano plot (q value)
->>>>>>> 625bf22dc68681d6d594ba6e29a050a2aba4bf20
+
 
 ```{r}
 #| message: false
@@ -405,5 +405,4 @@ volcano_plot <- merged_estimates_p |>
 
 volcano_plot
 ```
-=======
->>>>>>> 625bf22dc68681d6d594ba6e29a050a2aba4bf20
+
