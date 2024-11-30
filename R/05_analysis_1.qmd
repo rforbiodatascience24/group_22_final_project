@@ -67,7 +67,7 @@ ggplot(selected_genes_long, aes(x = gene, y = Expression, fill = Status)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("../results/plots/top_botom_15_genes.png")
+#ggsave("../results/plots/top_botom_15_genes.png")
 
 
 ```

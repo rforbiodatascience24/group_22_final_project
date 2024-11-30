@@ -28,18 +28,7 @@ ggplot(merged_log2_fold, aes(x = log2_fold_change, y = -log10(p_value))) +
 
 ### Plot of up- and downregulated genes in smokers
 
-```{r}
-# Categorizing genes as upregulated or downregulated based on log2_fold_change
-merged_log2_fold <- merged_log2_fold |>
-  mutate(Regulation = case_when(
-    log2_fold_change > 0 ~ "Upregulated",
-    log2_fold_change < 0 ~ "Downregulated")) |>
-  mutate(Significance = case_when(
-    p_value < 0.05 ~ "Significant",
-    p_value > 0.05 ~ "Not significant"
-  ))
-
-merged_log2_fold
+```{merged_log2_fold}
 
 ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_change, fill = Regulation)) +
   geom_bar(stat = "identity", width = 0.8) + 
