@@ -8,6 +8,7 @@ editor: visual
 
 ```{r}
 library(dplyr)
+library(ggplot2)
 ```
 
 ```{r}
@@ -28,8 +29,7 @@ ggplot(merged_log2_fold, aes(x = log2_fold_change, y = -log10(p_value))) +
 
 ### Plot of up- and downregulated genes in smokers
 
-```{merged_log2_fold}
-
+```{r}
 ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_change, fill = Regulation)) +
   geom_bar(stat = "identity", width = 0.8) + 
   coord_flip() +  # Flip coordinates so the plot is more interpretable 

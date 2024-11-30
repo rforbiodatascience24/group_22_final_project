@@ -98,7 +98,6 @@ p_values <- merged_data |>
 merged_log2_fold <- merged_log2_fold |> 
   left_join(p_values, by = "gene")
 
-{r}
 # Categorizing genes as upregulated or downregulated based on log2_fold_change
 merged_log2_fold <- merged_log2_fold |>
   mutate(Regulation = case_when(
