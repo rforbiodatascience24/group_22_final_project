@@ -16,6 +16,7 @@ merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
+library(tidyr)
 ```
 
 #### Extract the top 100 genes with the largest absolute log2_fold_change
@@ -34,11 +35,6 @@ print(top_genes)
 #### Plotting the top 15 and bottom 15
 
 ```{r}
-# Load libraries
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-
 # Select the top 15 genes with the largest and the 15 genes with the smallest
 top_15_genes <- merged_log2_fold |>
   filter(p_value < 0.05) |> 
@@ -102,7 +98,6 @@ print(mean_expression)
 #### Plotting
 
 ```{r}
-
 # Create the bar plot
 ggplot(mean_expression, aes(x = Gene, 
                             y = MeanExpression, 
@@ -121,10 +116,6 @@ ggplot(mean_expression, aes(x = Gene,
 ```
 
 ```{r}
-# Load necessary library
-library(dplyr)
-library(tidyr)
-
 # Selecting relevant columns from `merged_log2_fold_change`
 selected_genes <- merged_log2_fold |> 
   select(gene, `non-smoker`, smoker, log2_fold_change, p_value) # Adjust columns as needed
