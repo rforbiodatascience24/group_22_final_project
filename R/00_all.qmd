@@ -18,16 +18,26 @@ quarto::quarto_render(
 )
 
 quarto::quarto_render(
-    input = "~/projects/group_22_final_project/R/02_load.qmd",
+    input = "~/projects/group_22_final_project/R/02_clean.qmd",
+    output_format = "html"
+)
+
+#MANGLER!!!! Virker ikke
+quarto::quarto_render(
+    input = "~/projects/group_22_final_project/R/03_augment.qmd",
+    output_format = "html"
+)
+
+quarto::quarto_render(
+    input = "~/projects/group_22_final_project/R/04_describe.qmd",
     output_format = "html"
 )
 
 
 
 
-
-quarto::quarto_render("~/projects/group_22_final_project/R/02_clean.qmd")
 quarto::quarto_render("~/projects/group_22_final_project/R/03_augment.qmd")
+
 quarto::quarto_render("~/projects/group_22_final_project/R/04_describe.qmd")
 quarto::quarto_render("~/projects/group_22_final_project/R/05_analysis_1.qmd")
 quarto::quarto_render("~/projects/group_22_final_project/R/06_analysis_2.qmd")
@@ -39,78 +49,15 @@ quarto::quarto_render("~/projects/group_22_final_project/R/07_analysis_3.qmd")
 ```{r}
 file.rename(from = "~/projects/group_22_final_project/R/01_load.html",
              to = "~/projects/group_22_final_project/results/01_load.html" )
+
+file.rename(from = "~/projects/group_22_final_project/R/02_clean.html",
+             to = "~/projects/group_22_final_project/results/02_clean.html" )
+
+##MANGLER - VIRKER IKKE
+file.rename(from = "~/projects/group_22_final_project/R/03_augment.html",
+             to = "~/projects/group_22_final_project/results/03_augment.html" )
 ```
 
 ```{r}
 
-```
-
-```{r}
-#source(here("R/99_proj_func.R"))
-```
-
-```{r}
-#quarto::quarto_render(here("R/01_load.qmd"), output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/01_load.html"), here("results/01_load.html"))
-```
-
-```{r}
-#quarto::quarto_render(here("R/02_clean.qmd"), , output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/02_clean.html"), here("results/02_clean.html"))
-```
-
-```{r}
-
-#quarto::quarto_render(here("R/03_augment.qmd"), , output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/03_augment.html"), here("results/03_augment.html"))
-```
-
-```{r}
-
-#quarto::quarto_render(here("R/04_describe.qmd"), output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/04_describe.html"), here("results/04_describe.html"))
-```
-
-```{r}
-#quarto::quarto_render(here("R/05_analysis_1.qmd"), output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/05_analysis_1.html"), here("results/05_analysis_1.html"))
-```
-
-```{r}
-#quarto::quarto_render(here("R/06_analysis_2.qmd"), output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/06_analysis_2.html"), here("results/06_analysis_2.html"))
-```
-
-```{r}
-#quarto:: quarto_render(here("R/07_analysis_3.qmd"), output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/07_analysis_3.html"), here("results/07_analysis_3.html"))
-```
-
-```{r}
-#quarto:: quarto_render(here("R/08_analysis_4.qmd"), output_format = "html")
-```
-
-```{r}
-#file.rename(here("R/08_analysis_4.html"), here("results/08_analysis_4.html"))
 ```
