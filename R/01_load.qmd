@@ -60,5 +60,5 @@ write_tsv(ncbi_data,
             file = "../data/01_ncbi_data.tsv.gz")
 
 write_tsv(annotation_data$probes,
-            #file = "../data/01_ncbi_annot_probes.tsv.gz")
+            file = "../data/01_ncbi_annot_probes.tsv.gz")
 ```
