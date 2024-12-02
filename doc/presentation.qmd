@@ -11,6 +11,14 @@ format:
     logo: images/r4bds_logo_small.png
     footer: "R for Bio Data Science"
 ---
+```{r}
+library("tidyverse")
+library("readr")
+library("broom")
+library("here")
+library("ggrepel")
+source("../R/99_proj_func.R")
+```
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
@@ -46,13 +54,30 @@ ncbi_data <- read_tsv(here("data/01_ncbi_data.tsv.gz"))  # Read and display the 
 print(head(ncbi_data, 10))  # Print the first 10 rows to display
 ```
 
-### Clean data
+### Characteristics data
 
 ```{r}
 #| echo: true
-charctaristics_data <- read_tsv(here("data/01_ncbi_data.tsv.gz"))  # Read and display the gzipped TSV file
-print(head(ncbi_data, 10))  # Print the first 10 rows to display
+characteristics_data <- read_tsv(here("02_dat_clean_characteristics.tsv.gz"))  # Read and display the gzipped TSV file
+print(head(characteristics_data, 10))  # Print the first 10 rows to display
 ```
+
+### Genes data
+
+```{r}
+#| echo: true
+genes_data <- read_tsv(here("02_dat_clean_genes.tsv.gz"))  # Read and display the gzipped TSV file
+print(head(genes_data, 10))  # Print the first 10 rows to display
+```
+
+### Clean data
+```{r}
+#| echo: true
+clean_data <- read_tsv(here("02_dat_clean.tsv.gz"))  # Read and display the gzipped TSV file
+print(head(clean_data, 10))  # Print the first 10 rows to display
+```
+
+
 :::
 
 
