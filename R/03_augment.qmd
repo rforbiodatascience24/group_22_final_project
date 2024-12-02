@@ -95,7 +95,6 @@ placental_gene_expr_log2_fold <- placental_gene_expr |>
   #Calculate the log2_fold_change for each gene             
               values_from = mean_expr) |> 
   mutate(log2_fold_change = log2(`smoker` / `non-smoker`))
-placental_gene_expr_log2_fold
 
 p_values <- placental_gene_expr |>
   pivot_longer(cols = all_of(gene_cols),
