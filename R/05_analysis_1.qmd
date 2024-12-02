@@ -1,6 +1,8 @@
 ---
 title: "05_analysis_1"
-format: html
+format:
+  html:
+    embed-resources: true
 editor: visual
 ---
 
@@ -11,22 +13,19 @@ editor: visual
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
+library(tidyr)
 ```
 
 ### Load data
 
 ```{r}
+#| message: false
 placental_gene_expr_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 ### Plotting the top 15 and bottom 15
 
 ```{r}
-# Load libraries
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-
 # Select the top 15 genes with the largest and the 15 genes with the smallest
 top_15_genes <- placental_gene_expr_log2_fold |>
   filter(p_value < 0.05) |> 

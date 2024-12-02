@@ -1,6 +1,8 @@
 ---
 title: "04_describe"
-format: html
+format:
+  html:
+    embed-resources: true
 editor: visual
 ---
 
@@ -20,6 +22,7 @@ library(gridExtra)
 ### Download data
 
 ```{r}
+#| message: false
 placental_gene_expr <- read_tsv("../data/03_dat_augment_placental_gene_expr.tsv")
 ```
 
@@ -71,6 +74,7 @@ write.csv(summary_table, file = "../results/description_table.csv", row.names = 
 ### Box-plot over Age Filled by Smoker Status
 
 ```{r}
+#| message: false
 bp_age <- placental_gene_expr |>
   ggplot(aes(x = status, 
              y = age_years, 
@@ -105,6 +109,7 @@ ggsave("../results/plots/description_age_boxplot.png")
 ### Box-plot over Maternal BMI Filled by Smoker Status
 
 ```{r}
+#| message: false
 bp_maternal_bmi <- placental_gene_expr |>
   ggplot(aes(x = status, 
              y = maternal_bmi, 
@@ -138,6 +143,7 @@ ggsave("../results/plots/description_maternal_bmi_boxplot.png")
 ### Box-plot over Placental Volume in cm3 filled by smoker status
 
 ```{r}
+#| message: false
 bp_placental_volume <- placental_gene_expr |>
   ggplot(aes(x = status, 
              y = placental_volume_cm3, 
@@ -173,6 +179,7 @@ ggsave("../results/plots/description_placental_volume_boxplot.png")
 ### Combined plot: Correlation Between Smoker Status and Maternal Characteristics
 
 ```{r}
+#| message: false
 #Combined plot with correlation between smoker status and maternal characteristics: Placental volume, maternal BMI and mothers age.
 combined_plot1 <- (bp_placental_volume + theme(legend.position = "none") + 
      (bp_maternal_bmi + theme(legend.position = "none")
@@ -195,38 +202,41 @@ combined_plot1 <- (bp_placental_volume + theme(legend.position = "none") +
               heights = unit(c(1.35, 2.35), 
                              c('cm', 'cm')))
 ggsave("../results/plots/description_combined_plot1.png")
+
+#Printing the plot
 combined_plot1
 ```
 
 ### Correlation between BMI Class and Smoker Status
 
 ```{r}
-#bp_bmi_classs_status <- placental_gene_expr |>
-  #ggplot(aes(x = bmi_class, 
-             #fill = status)) +
-  #geom_bar() +
-  #labs(
-    #x = "BMI Class",
-    #y = "Count ",
-    #title = "Relationship between BMI Class and Status", 
-    #caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  #) +
-  #scale_fill_manual(
-      #values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
-    #) +
-  #theme(
-      #panel.background = element_rect(fill = "white"),
-      #plot.background = element_rect(fill = "white"),
-      #panel.grid.major = element_line(color = "gray90"),
-      #panel.grid.minor = element_blank(),
-      #axis.text = element_text(size = 8, 
-                               #color = "black"),
-      #axis.title = element_text(size = 8, 
-                                #color = "black"),
-      #plot.title = element_text(size = 8, 
-                                #face = "bold", 
-                                #color = "black"))
+#| message: false
+bp_bmi_classs_status <- placental_gene_expr |>
+  ggplot(aes(x = bmi_class, 
+             fill = status)) +
+  geom_bar() +
+  labs(
+    x = "BMI Class",
+    y = "Count ",
+    title = "Relationship between BMI Class and Status", 
+    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
+  ) +
+  scale_fill_manual(
+      values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
+    ) +
+  theme(
+      panel.background = element_rect(fill = "white"),
+      plot.background = element_rect(fill = "white"),
+      panel.grid.major = element_line(color = "gray90"),
+      panel.grid.minor = element_blank(),
+      axis.text = element_text(size = 8, 
+                               color = "black"),
+      axis.title = element_text(size = 8, 
+                                color = "black"),
+      plot.title = element_text(size = 8, 
+                                face = "bold", 
+                                color = "black"))
 
-#ggsave("../results/plots/description_bmi_class_boxplot.png")
+ggsave("../results/plots/description_bmi_class_boxplot.png")
 
 ```
