@@ -103,7 +103,6 @@ bp_age <- placental_gene_expr |>
 
 ggsave("../results/plots/description_age_boxplot.png")
 
-
 ```
 
 ### Box-plot over Maternal BMI Filled by Smoker Status
@@ -207,36 +206,3 @@ ggsave("../results/plots/description_combined_plot1.png")
 combined_plot1
 ```
 
-### Correlation between BMI Class and Smoker Status
-
-```{r}
-#| message: false
-bp_bmi_classs_status <- placental_gene_expr |>
-  ggplot(aes(x = bmi_class, 
-             fill = status)) +
-  geom_bar() +
-  labs(
-    x = "BMI Class",
-    y = "Count ",
-    title = "Relationship between BMI Class and Status", 
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  ) +
-  scale_fill_manual(
-      values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
-    ) +
-  theme(
-      panel.background = element_rect(fill = "white"),
-      plot.background = element_rect(fill = "white"),
-      panel.grid.major = element_line(color = "gray90"),
-      panel.grid.minor = element_blank(),
-      axis.text = element_text(size = 8, 
-                               color = "black"),
-      axis.title = element_text(size = 8, 
-                                color = "black"),
-      plot.title = element_text(size = 8, 
-                                face = "bold", 
-                                color = "black"))
-
-ggsave("../results/plots/description_bmi_class_boxplot.png")
-
-```

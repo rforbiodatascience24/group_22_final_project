@@ -16,6 +16,7 @@ library(tidyverse)
 ### Loading the data
 
 ```{r}
+#| message: false
 ncbi_data <- read_tsv("../data/01_ncbi_data.tsv.gz")
 ncbi_annot_probes <- read_tsv("../data/01_ncbi_annot_probes.tsv.gz")
 ```
@@ -26,9 +27,6 @@ ncbi_annot_probes <- read_tsv("../data/01_ncbi_annot_probes.tsv.gz")
 # Inspecting the dataset to locate where the sample ID's are
 sample_id_row <- ncbi_data[which(ncbi_data$col_1 == "ID_REF"), -1]  # Finding all places in col1 that is named ID_REF and extracts all values associated with this observation
 sample_ids <- as.character(sample_id_row)                           # Transforming sample_ids to characters
-
-# Printing extracted sample IDs
-print(sample_ids)
 ```
 
 ### Extracting and filtering relevant data
@@ -45,9 +43,6 @@ ncbi_genes_dirty <- ncbi_data |>
   as_tibble() |> 
   filter(str_detect(col_1, "^ILMN"))  # Searching for observations starting with ILMN in col1
 
-# Viewing the filtered data
-print(head(ncbi_characteristics_dirty))
-print(head(ncbi_genes_dirty))
 ```
 
 ### Tidying patient characteristics data
@@ -74,8 +69,6 @@ tidy_characteristics <- tidy_characteristics |>
   drop_na()                                   # dropping all NA values
   
 
-# Printing the top of the tidy_characteristics data 
-print(head(tidy_characteristics))
 ```
 
 ### Adding gene names from annotation file
@@ -93,7 +86,7 @@ placental_gene_expr <- ncbi_annot_probes |>
   mutate(ILMN_Gene = paste(Probe_Id, ILMN_Gene, sep = "_")) |>  # Combine Probe_Id and ILMN_Gene
     select(-1) |>
   rename(col_1 = ILMN_Gene)
-placental_gene_expr
+
 ```
 
 ### Tidying gene expression data
@@ -108,8 +101,7 @@ tidy_genes <- placental_gene_expr |>
   mutate(Sample_ID = sample_ids[seq_len(n_distinct(Sample))]) |>   # adding the sample_IDs in a new column
   relocate(Sample_ID)   # moving Sample_ID to the first column
 
-print(head(tidy_genes))
-tidy_genes
+
 
 # Removing the sample column and dropping NAs
 tidy_genes <- tidy_genes |> 
@@ -118,8 +110,7 @@ tidy_genes <- tidy_genes |>
   mutate(across(where(is.character), ~ na_if(., "not available"))) |>  # replace "not available" with NA
   drop_na()                                   # dropping all NA values
 
-# Printing the top of the tidy_genes data 
-print(tidy_genes)
+
 ```
 
 ### Cleaning column names
@@ -139,9 +130,7 @@ colnames(tidy_genes) <- colnames(tidy_genes) |>
   str_replace_all("\\(|\\)", "") |>         # Removing parentheses
   str_to_lower()                            # Converting to lowercase
 
-# Printing to check that all column names are standardized 
-print(colnames(tidy_genes))
-print(colnames(tidy_characteristics))
+
 ```
 
 ### Merging patient characteristics and gene expression data
@@ -150,7 +139,7 @@ print(colnames(tidy_characteristics))
 # Merge the two datasets by `sample_id`
 placental_gene_expr <- tidy_characteristics |> 
   left_join(tidy_genes, by = "sample_id")  # Joining the two datasets on sample_ID
-placental_gene_expr
+
 # Convert columns to numeric values
 cols_not_to_convert <- c("sample_id", 
                          "status", 
@@ -161,8 +150,6 @@ placental_gene_expr[cols_to_convert] <- lapply(placental_gene_expr[cols_to_conve
                                        function(x) as.numeric(as.character(x)))
 
 
-# Checking the merged data
-print(head(placental_gene_expr))
 ```
 
 ### Saving the final merged data to a tsv file
