@@ -4,15 +4,7 @@ format: html
 editor: visual
 ---
 
-### Download data
-
-```{r}
-merged_data <- read_tsv("../data/03_dat_augment_merged_clean_aug.tsv")
-```
-
-## Linear regression for genes associated with smoking
-
-### Forest plot and Volcano plot (q value)
+### Loading libraries
 
 ```{r}
 #| message: false
@@ -20,7 +12,17 @@ library(tidyverse)
 library(broom)
 ```
 
-#### Creating a table with status, gene names and log2 expression levels
+### Download data
+
+```{r}
+merged_clean_aug <- read_tsv("../data/03_dat_augment_merged_clean_aug.tsv")
+```
+
+## Linear regression for genes associated with smoking
+
+### Forest plot and Volcano plot (q value)
+
+### Creating a table with status, gene names and log2 expression levels
 
 ```{r}
 #Transforming the data to a long format to prepare it for analysis
@@ -319,25 +321,25 @@ lr_ilmn_1651767 <- merged_clean_aug_long |>
     y = "Log2 Expr. level",
     title = "Probe_ID: ilmn_1651767_mkl1",
     color = "Smoking Status") +  # Set legend title
-  scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
-                     labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels))
+  #scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
+                     #labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels))
 
   
-linear_regression_plot <- lr_ilmn_1651278 / lr_ilmn_1651375 / lr_ilmn_1651767 + 
-  plot_layout(guides = "collect", 
-              heights = c(5, 5, 5),   # Adjust row heights
-              design = "A
-                          B
-                          C") +    # Designates the layout for each plot
-  plot_annotation(
-    title = "Linear Regression of Gene Expression Levels",
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  )
+#linear_regression_plot <- lr_ilmn_1651278 + lr_ilmn_1651375 + lr_ilmn_1651767 + 
+  #plot_layout(guides = "collect", 
+              #heights = c(5, 5, 5),   # Adjust row heights
+              #design = "A
+                          #B
+                          #C") +    # Designates the layout for each plot
+  #plot_annotation(
+    #title = "Linear Regression of Gene Expression Levels",
+    #caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
+  #)
 
 
-linear_regression_plot
+#linear_regression_plot
 
-ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, height = 15, width = 8, units = "in")
+#ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, height = 15, width = 8, units = "in")
 ```
 
 ### Forest plot for three genes

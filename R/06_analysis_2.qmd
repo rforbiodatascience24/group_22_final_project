@@ -9,12 +9,13 @@ editor: visual
 ```{r}
 library(dplyr)
 library(ggplot2)
+library(tidyverse)
 ```
 
 ### Download data
 
 ```{r}
-merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
+merged_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 ```{r}

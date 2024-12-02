@@ -4,18 +4,18 @@ format: html
 editor: visual
 ---
 
-### Load data
-
-```{r}
-merged_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
-```
-
 #### Packages
 
 ```{r}
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
+```
+
+### Load data
+
+```{r}
+merged_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 #### Extract the top 100 genes with the largest absolute log2_fold_change
