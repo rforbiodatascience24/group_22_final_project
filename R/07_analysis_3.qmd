@@ -161,12 +161,16 @@ placental_gene_expr_estimates |>
   theme_minimal(base_size = 16) +
   theme(plot.title = element_text(hjust = 1, size = 11),
         axis.title = element_text(size = 10),
+        axis.text.y = element_blank(),  # Remove y-axis labels
         axis.text = element_text(size = 5),
         plot.caption = element_text(size = 7)) +
   labs(x = "Estimates (95%CIs)",
-       y = "",
+       y = "Genes",
        title = "Genes Associated with Smoking (not significant)",
        caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
+
+ggsave("../results/plots/genes_associated_with_smoking_all.png")
+
 ```
 
 ### Plotting of genes which are significant/not significant
@@ -196,11 +200,12 @@ volcono_plot_q <- placental_gene_expr_estimates |>
   labs(
     x = "Estimates",
     y = "-log10(p)",
-    title = "Volcano plot for down/up regulated genes with significance < 0.05",
+    title = "Volcano plot for down/up regulated genes with significance q < 0.05",
     subtitle = "Significant genes highlighted with turquoise - no significant genes found",
     caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 
 volcono_plot_q
+ggsave("../results/plots/volcano_plot.png")
 ```
 
 Since no significant q-values were found, we decided to look at significant p-values instead.
@@ -245,8 +250,10 @@ placental_gene_expr_estimates_p |>
         plot.caption = element_text(size = 7)) +
   labs(x = "Estimates (95%CIs)",
        y = "Genes",
-       title = "Genes Associated with Smoking",
+       title = "Genes Associated with Smoking (Significant)",
        caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
+ggsave("../results/plots/genes_associated_with_smoking_significant1.png")
+
 ```
 
 It is clear that all significant genes are divided into 3 clusters:
@@ -281,9 +288,9 @@ lr_ilmn_1651278 <- placental_gene_expr_clean_aug_long |>
               color = "black") +  
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
-  labs(x = "Status",
-       y = "Log2 Expr. level",
-       title = "Probe_ID: ilmn_1651278_snip1",
+  labs(x = "",
+       y = "",
+       title = "ILMN_1651278_snip1",
        color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels
@@ -300,9 +307,9 @@ lr_ilmn_1651375 <- placental_gene_expr_clean_aug_long |>
               color = "black") +  
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
-  labs(x = "Status",
+  labs(x = "",
     y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651375_bicd2",
+    title = "ILMN_1651375_bicd2",
     color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels)
@@ -320,8 +327,8 @@ lr_ilmn_1651767 <- placental_gene_expr_clean_aug_long |>
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
  labs(x = "Status",
-    y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651767_mkl1",
+    y = "",
+    title = "ILMN_1651767_mkl1",
     color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels))
@@ -380,6 +387,7 @@ placental_gene_expr_estimates_p |>
        y = "",
        title = "Genes Associated with Smoking",
        caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
+ggsave("../results/plots/genes_associated_with_smoking_3_genes.png")
 ```
 
 ### Forest plot for 30 random significant genes (p\<0.05)
@@ -404,6 +412,7 @@ placental_gene_expr_estimates_p |>
        y = "",
        title = "Genes Associated with Smoking",
        caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
+ggsave("../results/plots/genes_associated_with_smoking_30_genes.png")
 ```
 
 ### Volcano plot
@@ -432,9 +441,10 @@ volcano_plot <- placental_gene_expr_estimates_p |>
   labs(
     x = "Estimates",
     y = "-log10(p)",
-    title = "Volcano plot for down/up regulated genes with significance p< 0.05",
+    title = "Volcano plot for down/up regulated genes with significance p < 0.05",
     subtitle = "Genes highlighted in turquoise had a significant p-value",
     caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016")
 
 volcano_plot
+ggsave("../results/plots/volcano_plot_p_value.png")
 ```

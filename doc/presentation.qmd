@@ -16,8 +16,6 @@ format:
     transition: slide
 editor: visual
 ---
-<<<<<<< HEAD
-
 
 ```{r}
 library("tidyverse")
@@ -27,35 +25,15 @@ library("here")
 library("ggrepel")
 source("../R/99_proj_func.R")
 ```
-=======
->>>>>>> 0e9b805475a2a2bb18c2d5d035826dd4564c3942
+
+## Study description
+This study is about....
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
 
-## Titel of slide 2
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-
-library("tidyverse")
-```
-
-<<<<<<< HEAD
-## Untidy –\> Tidy data
-
-::: {style="margin-top: -15px; margin-bottom: -15px;"}
-::: {style="line-height: 1.1;"}
-1. Each variable is a column; each column is a variable.\ 
-2. Each observation is a row; each row is an observation.\
-3. Each value is a cell; each cell is a single value.\
-
-:::
-:::
+## Data cleaning and wrangling
 
 ::: panel-tabset
 ### Dirty data
@@ -91,119 +69,130 @@ print(head(clean_data, 10))  # Print the first 10 rows to display
 
 
 :::
-=======
-- Bulletpoints in the middle
 
-- Bulletpoints
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
 
-- Bulletpoints
->>>>>>> 0e9b805475a2a2bb18c2d5d035826dd4564c3942
+## Decription of data 
+
+```{r}
+#| echo: true
+summary_data <- read_csv(here("results/description_table.csv"))  # Read sammary table
+print(summary_data)  # Print table
+```
+
+
+- Important characteristics for pregnancy
+- Difference in age
+
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
+## Description of data
+:::: {.columns}
+
+::: {.column width="40%"}
+- Little to no difference in placental volume
+- Surprising as children of smokers have a lower birth weight [1] 
+- Possible lifestyle or physiological factors linked to smoking 
+
+[1] Kataoka, M. C., Carvalheira, A. P. P., Ferrari, A. P., Malta, M. B., de Barros Leite Carvalhaes, M. A., & de Lima Parada, C. M. G. (2018). Smoking during pregnancy and harm reduction in birth weight: a cross-sectional study. BMC pregnancy and childbirth, 18, 1-10.
+:::
+
+::: {.column width="60%"}
+![](../results/plots/description_combined_plot1.png){width=80%}
+:::
+
+::::
 
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of 3
-:::: {.columns}
+## Analysis of data
 
-::: {.column width="50%"}
-![](../results/plots/description_age_boxplot.png){width=70%}
-{width=70%}
-_Figure: An example plot showing results._
+:::: {.columns style="margin-left: 0px;"}
+
+::: {.column style="margin-left: 0px; width: 40%;"}
+- Bulletpoints 
 :::
 
-::: {.column width="50%"}
-![](../results/plots/description_age_boxplot.png){width=70%}
+
+::: {.column width="60%"}
+![](../results/plots/upregulated_downregulated_genes.png){width=150%}
+:::
+
+::::
+
+
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
+## Analysis of data
+
+:::: {.columns}
+
+::: {.column width="40%"}
+- Bulletpoints 
+:::
+
+::: {.column width="60%"}
+![](../results/plots/XXX.png){width=100%}
+:::
+
+::::
+
+
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
+## Analysis of data
+
+:::: {.columns}
+
+::: {.column width="40%"}
+- Bulletpoints 
+:::
+
+::: {.column width="60%"}
+![](../results/plots/XXX.png){width=100%}
 :::
 
 ::::
 
 
 
-
-
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of slide 4 
-Sætter billede i midten
-![](images/advr_map.png){fig-align="center" width=50%}
-
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 5
+## Analysis of data
 
 :::: {.columns}
 
 ::: {.column width="40%"}
-Venstre
+- Bulletpoints 
 :::
 
 ::: {.column width="60%"}
-Højre
+![](../results/plots/XXX.png){width=100%}
 :::
-
 ::::
 
 
-
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of slide 6
+## Analysis of data
 
 :::: {.columns}
 
 ::: {.column width="40%"}
-Venstre
+- Bulletpoints 
 :::
 
 ::: {.column width="60%"}
-Højre
-:::
-
-::::
-
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 7
-
-:::: {.columns}
-
-::: {.column width="40%"}
-Venstre
-:::
-
-::: {.column width="60%"}
-Højre
-:::
-
-::::
-
-_Her skrives der i kursiv_
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 8
-
-Skriv her for at skrive i midten øverst på sildet 
-
-:::: {.columns}
-
-::: {.column width="40%"}
-Venstre
-:::
-
-::: {.column width="60%"}
-Højre
+![](../results/plots/XXX.png){width=100%}
 :::
 
 ::::
@@ -211,43 +200,10 @@ Højre
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of slide 9 
-
-:::: {.columns}
-
-::: {.column width="40%"}
-Venstre
-:::
-
-::: {.column width="60%"}
-Højre
-:::
+## Conclusion
+- bulletpoints
 
 
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 10
-
-:::: {.columns}
-
-::: {.column width="40%"}
-Venstre
-:::
-
-::: {.column width="60%"}
-Højre 
-:::
-
-::::
-Skriv her for at skrive i midten i bunden 
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Thanks and bye!
-
+### Future
+- bulletpoints
 
