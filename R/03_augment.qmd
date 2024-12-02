@@ -14,6 +14,7 @@ library(tidyverse)
 ### Loading the data
 
 ```{r}
+#| message: false
 placental_gene_expr <- read_tsv("../data/02_dat_clean.tsv")
 ```
 
@@ -45,7 +46,6 @@ placental_gene_expr <- placental_gene_expr |>
                                        "Obesity class III"))) |>
   relocate(bmi_class,
            .after = maternal_bmi) #Moving the column bmi_class to the correct place and divided as we want. 
-print(head(placental_gene_expr))
 ```
 
 ### Dividing the mothers into age groups
@@ -61,8 +61,6 @@ placental_gene_expr <- placental_gene_expr |>
                                     50))) |>
   relocate(age_group,
            .after = age_years) #Adding age_group column after age_years column
-# Checking the classes are divided correctly and age_group is placed after age_years
-print(head(placental_gene_expr))
 ```
 
 ### Converting status to numeric values
@@ -74,13 +72,12 @@ placental_gene_expr_clean_aug <- placental_gene_expr |>
     status == "smoker" ~ 1,
     status == "non-smoker" ~ 0)) |> 
   relocate(status_num = y)
-#Checking the conversion
-placental_gene_expr_clean_aug
 ```
 
 ### Creating table with log2-fold-change and p-values
 
 ```{r}
+#| message: false
 # Extract genedata from placental_gene_expr
 gene_cols <- grep("^ilmn",
                   names(placental_gene_expr),
@@ -121,8 +118,6 @@ placental_gene_expr_log2_fold <- placental_gene_expr_log2_fold |>
     p_value < 0.05 ~ "Significant",
     p_value > 0.05 ~ "Not significant"
   ))
-
-print(placental_gene_expr_log2_fold)
 ```
 
 ### Saving the data in a tsv file
