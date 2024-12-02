@@ -16,8 +16,6 @@ format:
     transition: slide
 editor: visual
 ---
-<<<<<<< HEAD
-
 
 ```{r}
 library("tidyverse")
@@ -27,35 +25,15 @@ library("here")
 library("ggrepel")
 source("../R/99_proj_func.R")
 ```
-=======
->>>>>>> 0e9b805475a2a2bb18c2d5d035826dd4564c3942
+
+## Study description
+This study is about....
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
 
-## Titel of slide 2
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-
-library("tidyverse")
-```
-
-<<<<<<< HEAD
-## Untidy –\> Tidy data
-
-::: {style="margin-top: -15px; margin-bottom: -15px;"}
-::: {style="line-height: 1.1;"}
-1. Each variable is a column; each column is a variable.\ 
-2. Each observation is a row; each row is an observation.\
-3. Each value is a cell; each cell is a single value.\
-
-:::
-:::
+## Data cleaning and wrangling
 
 ::: panel-tabset
 ### Dirty data
@@ -89,91 +67,118 @@ clean_data <- read_tsv(here("data/02_dat_clean.tsv"))  # Read clean merged data
 print(head(clean_data, 10))  # Print the first 10 rows to display
 ```
 
-
 :::
-=======
-- Bulletpoints in the middle
 
-- Bulletpoints
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
+## Description of data
+:::: {.columns}
 
-- Bulletpoints
->>>>>>> 0e9b805475a2a2bb18c2d5d035826dd4564c3942
+::: {.column width="70%"}
+![](../results/plots/description_combined_plot1.png){width=80%}
+:::
+
+::: {.column width="30%"}
+:::
+
+::::
 
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of 3
-:::: {.columns}
+## Analysis of data
 
-::: {.column width="50%"}
-![](../results/plots/description_age_boxplot.png){width=70%}
-{width=70%}
-_Figure: An example plot showing results._
+:::: {.columns style="margin-left: 0px;"}
+
+::: {.column style="margin-left: 0px; width: 40%;"}
+```{r}
+#| echo: true
+#| eval: false
+#| results: hide
+#| code-line-numbers: "2-7|9-13"
+# Extract genedata from merged_data
+gene_cols <- grep("^ilmn",
+                  names(merged_data),
+                  value = TRUE)
+
+merged_log2_fold <- merged_data |>
+  group_by(status) |> 
+  # Calculate the mean value for expression levels, for each gene, divided into smoker and non-smoker
+  summarise(across(all_of(gene_cols),
+                   mean, na.rm = TRUE)) |> 
+  pivot_longer(cols = -status,
+               names_to = "gene",
+               values_to = "mean_expr") |> 
+  pivot_wider(names_from = status, 
+  # Calculate the log2_fold_change for each gene             
+              values_from = mean_expr) |> 
+  mutate(log2_fold_change = log2(`smoker` / `non-smoker`))
+ 
+p_values <- merged_data |>
+  pivot_longer(cols = all_of(gene_cols),
+               names_to = "gene",
+               values_to = "expression") |>
+  # Calculate the p-value for each gene 
+  group_by(gene) |> 
+  summarise(p_value = t.test(expression ~ status)$p.value)
+```
 :::
 
-::: {.column width="50%"}
-![](../results/plots/description_age_boxplot.png){width=70%}
+
+
+::: {.column width="60%"}
+![](../results/plots/upregulated_downregulated_genes.png){width=150%}
 :::
 
 ::::
 
 
 
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
+## Analysis of data
+
+:::: {.columns}
+- Bulletpoints 
+::: {.column width="40%"}
+Venstre
+:::
+
+::: {.column width="60%"}
+![](../results/plots/XXX.png){width=100%}
+:::
+
+::::
 
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of slide 4 
+## Analysis of data
+
+:::: {.columns}
+
+::: {.column width="40%"}
+Venstre
+:::
+
+::: {.column width="60%"}
+Højre
+:::
+
+::::
+
+
+
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
+## Analysis of data
 Sætter billede i midten
 ![](images/advr_map.png){fig-align="center" width=50%}
-
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 5
-
-:::: {.columns}
-
-::: {.column width="40%"}
-Venstre
-:::
-
-::: {.column width="60%"}
-Højre
-:::
-
-::::
-
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 6
-
-:::: {.columns}
-
-::: {.column width="40%"}
-Venstre
-:::
-
-::: {.column width="60%"}
-Højre
-:::
-
-::::
-
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 7
-
 :::: {.columns}
 
 ::: {.column width="40%"}
@@ -192,7 +197,7 @@ _Her skrives der i kursiv_
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of slide 8
+## Analysis of data
 
 Skriv her for at skrive i midten øverst på sildet 
 
@@ -211,7 +216,7 @@ Højre
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Title of slide 9 
+## Conclusion  
 
 :::: {.columns}
 
@@ -222,32 +227,3 @@ Venstre
 ::: {.column width="60%"}
 Højre
 :::
-
-
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Title of slide 10
-
-:::: {.columns}
-
-::: {.column width="40%"}
-Venstre
-:::
-
-::: {.column width="60%"}
-Højre 
-:::
-
-::::
-Skriv her for at skrive i midten i bunden 
-
-
-<!--# ---------------------------------------------------------------------- -->
-<!--# SLIDE ---------------------------------------------------------------- -->
-<!--# ---------------------------------------------------------------------- -->
-## Thanks and bye!
-
-
