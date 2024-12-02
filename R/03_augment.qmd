@@ -4,6 +4,12 @@ format: html
 editor: visual
 ---
 
+### Loading the data
+
+```{r}
+merged_data <- read_tsv("../data/02_dat_clean.tsv")
+```
+
 ### Creating BMI classes, and dividing the mothers
 
 ```{r}
@@ -98,5 +104,33 @@ p_values <- merged_data |>
 merged_log2_fold <- merged_log2_fold |> 
   left_join(p_values, by = "gene")
 
+# Categorizing genes as upregulated or downregulated based on log2_fold_change
+merged_log2_fold <- merged_log2_fold |>
+  mutate(Regulation = case_when(
+    log2_fold_change > 0 ~ "Upregulated",
+    log2_fold_change < 0 ~ "Downregulated")) |>
+  mutate(Significance = case_when(
+    p_value < 0.05 ~ "Significant",
+    p_value > 0.05 ~ "Not significant"
+  ))
+
 print(merged_log2_fold)
+```
+
+### Saving the data in a tsv file
+
+```{r}
+# Save the merged dataset to a tsv file
+write_tsv(merged_data,
+          file = "../data/03_dat_augment_merged_data.tsv")
+
+# Save the merged log2 fold dataset to a tsv file
+write_tsv(merged_log2_fold,
+          file = "../data/03_dat_augment_log2_fold.tsv")
+
+# Save the merged clean dataset to a tsv file
+write_tsv(merged_clean_aug,
+          file = "../data/03_dat_augment_merged_clean_aug.tsv")
+
+
 ```
