@@ -19,22 +19,22 @@ library(gridExtra)
 ### Download data
 
 ```{r}
-merged_data <- read_tsv("../data/03_dat_augment_merged_data.tsv")
+placental_gene_expr <- read_tsv("../data/03_dat_augment_placental_gene_expr.tsv")
 ```
 
-## Description of the Dataset
+### Description of the Dataset
 
 ```{r}
 # Number of rows and columns in the dataset 
-print(paste("Number of rows in dataset:", nrow(merged_data)))
-print(paste("Number of columns in dataset:",ncol(merged_data)))
+print(paste("Number of rows in dataset:", nrow(placental_gene_expr)))
+print(paste("Number of columns in dataset:",ncol(placental_gene_expr)))
 ```
 
-## Creating a Summary Table of the Dataset
+### Creating a Summary Table of the Dataset
 
 ```{r}
 #Making a summary table
-summary_table_merged_data <- merged_data |> 
+summary_table_placental_gene_expr <- placental_gene_expr |> 
   group_by(status) |> 
   summarise(
     `Mothers in Cohort` = n(),
@@ -53,7 +53,7 @@ summary_table_merged_data <- merged_data |>
                                                         ")")
   )
 #Transposing the table and removing the "status" row
-summary_table <- as.data.frame(t(summary_table_merged_data))
+summary_table <- as.data.frame(t(summary_table_placental_gene_expr))
 summary_table <- summary_table[-1, ]
 
 #Remaing the columns
@@ -67,10 +67,10 @@ print(summary_table)
 write.csv(summary_table, file = "../results/description_table.csv", row.names = TRUE)
 ```
 
-## Box-plot over Age Filled by Smoker Status
+### Box-plot over Age Filled by Smoker Status
 
 ```{r}
-bp_age <- merged_data |>
+bp_age <- placental_gene_expr |>
   ggplot(aes(x = status, 
              y = age_years, 
              fill = status)) +
@@ -101,10 +101,10 @@ ggsave("../results/plots/description_age_boxplot.png")
 
 ```
 
-## Box-plot over Maternal BMI Filled by Smoker Status
+### Box-plot over Maternal BMI Filled by Smoker Status
 
 ```{r}
-bp_maternal_bmi <- merged_data |>
+bp_maternal_bmi <- placental_gene_expr |>
   ggplot(aes(x = status, 
              y = maternal_bmi, 
              fill = status)) +
@@ -134,10 +134,10 @@ ggsave("../results/plots/description_maternal_bmi_boxplot.png")
   
 ```
 
-## Box-plot over Placental Volume in cm3 filled by smoker status
+### Box-plot over Placental Volume in cm3 filled by smoker status
 
 ```{r}
-bp_placental_volume <- merged_data |>
+bp_placental_volume <- placental_gene_expr |>
   ggplot(aes(x = status, 
              y = placental_volume_cm3, 
              fill = status)) +
@@ -169,7 +169,7 @@ ggsave("../results/plots/description_placental_volume_boxplot.png")
 
 ```
 
-## Combined plot: Correlation Between Smoker Status and Maternal Characteristics
+### Combined plot: Correlation Between Smoker Status and Maternal Characteristics
 
 ```{r}
 #Combined plot with correlation between smoker status and maternal characteristics: Placental volume, maternal BMI and mothers age.
@@ -197,10 +197,10 @@ ggsave("../results/plots/description_combined_plot1.png")
 combined_plot1
 ```
 
-## Correlation between BMI Class and Smoker Status
+### Correlation between BMI Class and Smoker Status
 
 ```{r}
-#bp_bmi_classs_status <- merged_data |>
+#bp_bmi_classs_status <- placental_gene_expr |>
   #ggplot(aes(x = bmi_class, 
              #fill = status)) +
   #geom_bar() +
