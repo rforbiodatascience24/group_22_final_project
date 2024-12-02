@@ -10,6 +10,7 @@ editor: visual
 #| message: false
 library(tidyverse)
 library(broom)
+library(ggrepel)
 ```
 
 ### Download data
@@ -170,7 +171,6 @@ merged_estimates |>
 ### Plotting of genes which are significant/not significant
 
 ```{r}
-library("ggrepel")
 volcono_plot_q <- merged_estimates |>
   mutate(lbl = case_when(
     is_significant == "yes" ~ gene,
