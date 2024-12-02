@@ -16,6 +16,7 @@ format:
     transition: slide
 editor: visual
 ---
+<<<<<<< HEAD
 
 
 ```{r}
@@ -26,6 +27,8 @@ library("here")
 library("ggrepel")
 source("../R/99_proj_func.R")
 ```
+=======
+>>>>>>> 0e9b805475a2a2bb18c2d5d035826dd4564c3942
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
@@ -42,6 +45,7 @@ source("../R/99_proj_func.R")
 library("tidyverse")
 ```
 
+<<<<<<< HEAD
 ## Untidy –\> Tidy data
 
 ::: {style="margin-top: -15px; margin-bottom: -15px;"}
@@ -87,6 +91,13 @@ print(head(clean_data, 10))  # Print the first 10 rows to display
 
 
 :::
+=======
+- Bulletpoints in the middle
+
+- Bulletpoints
+
+- Bulletpoints
+>>>>>>> 0e9b805475a2a2bb18c2d5d035826dd4564c3942
 
 
 <!--# ---------------------------------------------------------------------- -->
