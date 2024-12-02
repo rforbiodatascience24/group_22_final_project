@@ -8,15 +8,15 @@ editor_options:
 
 #### Contributors:
 
-Anna Rantzau Pugerup Rasmussen, s215071
+Anna Rantzau Pugerup Rasmussen (AnnaRantzau), s215071
 
-Ida Lundberg Meyer-Kristensen, s215029
+Ida Lundberg Meyer-Kristensen (Idalmk), s215029
 
-Mathilde Stenholt, s200047
+Mathilde Stenholt (matstenholt), s200047
 
-Nicoline Seehausen Hansen, s203530
+Nicoline Seehausen Hansen (Nicolineshansen), s203530
 
-Ulrikke Marie Feldbæk Furland, s204526
+Ulrikke Marie Feldbæk Furland (s204526), s204526
 
 #### Data Description
 
