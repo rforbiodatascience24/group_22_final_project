@@ -35,6 +35,9 @@ The scripts automatically retrieve all the data from the websites. Just
 run the commands in 00_all.qmd, and the data will be downloaded
 automatically.
 
+#### Link for Presentation
+https://raw.githack.com/rforbiodatascience24/group_22_project/main/doc/presentation.html
+
 #### References
 
 [1] Bruchova, H., Vasikova, A., Merkerova, M., Milcova, A., Topinka, J.,
