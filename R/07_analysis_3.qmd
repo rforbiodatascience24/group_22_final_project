@@ -159,7 +159,9 @@ placental_gene_expr_estimates |>
   geom_errorbarh() +
   geom_point() +
   theme_minimal(base_size = 16) +
-  theme(plot.title = element_text(hjust = 1, size = 11),
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.title = element_text(hjust = 1, size = 11),
         axis.title = element_text(size = 10),
         axis.text.y = element_blank(),  # Remove y-axis labels
         axis.text = element_text(size = 5),
@@ -191,11 +193,12 @@ volcono_plot_q <- placental_gene_expr_estimates |>
                   max.overlaps = 20) +
   geom_hline(yintercept = 0) +
   theme_minimal(base_size = 10) +
-  theme(
-    plot.title = element_text(hjust = 1),
-    plot.subtitle = element_text(hjust = 1),
-    legend.position = "none",
-    plot.caption = element_text(size = 6)  # Set smaller caption size here
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.title = element_text(hjust = 1),
+        plot.subtitle = element_text(hjust = 1),
+        legend.position = "none",
+        plot.caption = element_text(size = 6)  # Set smaller caption size here
   ) +
   labs(
     x = "Estimates",
@@ -243,7 +246,9 @@ placental_gene_expr_estimates_p |>
   geom_errorbarh() +
   geom_point() +
   theme_minimal(base_size = 16) +
-  theme(plot.title = element_text(hjust = 1, size = 11),
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.title = element_text(hjust = 1, size = 11),
         axis.title = element_text(size = 10),
         axis.text.y = element_blank(),  # Remove y-axis labels
         axis.text = element_text(size = 5),
@@ -287,7 +292,9 @@ lr_ilmn_1651278 <- placental_gene_expr_clean_aug_long |>
               se = TRUE, 
               color = "black") +  
   theme_minimal(base_size = 12) +
-  theme(plot.caption = element_text(size = 8)) +
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.caption = element_text(size = 8)) +
   labs(x = "Status",
        y = "Log2 Expr. level",
        title = "ILMN_1651278_snip1",
@@ -306,7 +313,9 @@ lr_ilmn_1651375 <- placental_gene_expr_clean_aug_long |>
               se = TRUE, 
               color = "black") +  
   theme_minimal(base_size = 12) +
-  theme(plot.caption = element_text(size = 8)) +
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.caption = element_text(size = 8)) +
   labs(x = "Status",
     y = "Log2 Expr. level",
     title = "ILMN_1651375_bicd2",
@@ -325,7 +334,9 @@ lr_ilmn_1651767 <- placental_gene_expr_clean_aug_long |>
               se = TRUE,
               color = "black") +  
   theme_minimal(base_size = 12) +
-  theme(plot.caption = element_text(size = 8)) +
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.caption = element_text(size = 8)) +
  labs(x = "Status",
     y = "Log2 Expr. level",
     title = "ILMN_1651767_mkl1",
@@ -363,7 +374,7 @@ linear_regression_plot <- lr_ilmn_1651278 / lr_ilmn_1651375 / lr_ilmn_1651767 +
 
 linear_regression_plot
 
-ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, height = 15, width = 8, units = "in")
+ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, height = 8, width = 8, units = "in")
 ```
 
 ### Forest plot for three genes
@@ -379,7 +390,9 @@ placental_gene_expr_estimates_p |>
   geom_errorbarh() +
   geom_point() +
   theme_minimal(base_size = 16) +
-  theme(plot.title = element_text(hjust = 1, size = 11),
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.title = element_text(hjust = 1, size = 11),
         axis.title = element_text(size = 10),
         axis.text = element_text(size = 5),
         plot.caption = element_text(size = 7)) +
@@ -404,7 +417,9 @@ placental_gene_expr_estimates_p |>
   geom_errorbarh() +
   geom_point() +
   theme_minimal(base_size = 16) +
-  theme(plot.title = element_text(hjust = 1, size = 11),
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.title = element_text(hjust = 1, size = 11),
         axis.title = element_text(size = 10),
         axis.text = element_text(size = 5),
         plot.caption = element_text(size = 7)) +
@@ -432,11 +447,12 @@ volcano_plot <- placental_gene_expr_estimates_p |>
                   max.overlaps = 20) +
   geom_hline(yintercept = 0) +
   theme_minimal(base_size = 10) +
-  theme(
-    plot.title = element_text(hjust = 1),
-    plot.subtitle = element_text(hjust = 1),
-    legend.position = "none",
-    plot.caption = element_text(size = 6)  # Set smaller caption size here
+  theme(panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+        plot.title = element_text(hjust = 1),
+        plot.subtitle = element_text(hjust = 1),
+        legend.position = "none",
+        plot.caption = element_text(size = 6)  # Set smaller caption size here
   ) +
   labs(
     x = "Estimates",
