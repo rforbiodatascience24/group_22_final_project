@@ -4,16 +4,9 @@ format: html
 editor: visual
 ---
 
-### Download data
-
-```{r}
-merged_data <- read_tsv("../data/03_dat_augment_merged_data.tsv")
-```
-
 ### Loading libraries
 
 ```{r}
-#| message: false
 library(tidyverse)
 library(table1)
 library(patchwork)
@@ -23,13 +16,18 @@ library(gt)
 library(gridExtra)
 ```
 
+### Download data
+
+```{r}
+merged_data <- read_tsv("../data/03_dat_augment_merged_data.tsv")
+```
+
 ## Description of the Dataset
 
 ```{r}
 # Number of rows and columns in the dataset 
 print(paste("Number of rows in dataset:", nrow(merged_data)))
 print(paste("Number of columns in dataset:",ncol(merged_data)))
-print(paste("Number of genes in Cohort:",ncol(tidy_genes)-1))
 ```
 
 ## Creating a Summary Table of the Dataset
@@ -62,7 +60,7 @@ summary_table <- summary_table[-1, ]
 colnames(summary_table) <- c("non-smoker", "smoker")
 
 
-# Ensuring that the final table looks right
+#Ensuring that the final table looks right
 print(summary_table)
 
 # Saving the table af a .csv file in results folder
@@ -202,32 +200,32 @@ combined_plot1
 ## Correlation between BMI Class and Smoker Status
 
 ```{r}
-bp_bmi_classs_status <- merged_data |>
-  ggplot(aes(x = bmi_class, 
-             fill = status)) +
-  geom_bar() +
-  labs(
-    x = "BMI Class",
-    y = "Count ",
-    title = "Relationship between BMI Class and Status", 
-    caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
-  ) +
-  scale_fill_manual(
-      values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
-    ) +
-  theme(
-      panel.background = element_rect(fill = "white"),
-      plot.background = element_rect(fill = "white"),
-      panel.grid.major = element_line(color = "gray90"),
-      panel.grid.minor = element_blank(),
-      axis.text = element_text(size = 8, 
-                               color = "black"),
-      axis.title = element_text(size = 8, 
-                                color = "black"),
-      plot.title = element_text(size = 8, 
-                                face = "bold", 
-                                color = "black"))
+#bp_bmi_classs_status <- merged_data |>
+  #ggplot(aes(x = bmi_class, 
+             #fill = status)) +
+  #geom_bar() +
+  #labs(
+    #x = "BMI Class",
+    #y = "Count ",
+    #title = "Relationship between BMI Class and Status", 
+    #caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
+  #) +
+  #scale_fill_manual(
+      #values = c("non-smoker" = "#F9A1A1", "smoker" = "#63B8B8")
+    #) +
+  #theme(
+      #panel.background = element_rect(fill = "white"),
+      #plot.background = element_rect(fill = "white"),
+      #panel.grid.major = element_line(color = "gray90"),
+      #panel.grid.minor = element_blank(),
+      #axis.text = element_text(size = 8, 
+                               #color = "black"),
+      #axis.title = element_text(size = 8, 
+                                #color = "black"),
+      #plot.title = element_text(size = 8, 
+                                #face = "bold", 
+                                #color = "black"))
 
-ggsave("../results/plots/description_bmi_class_boxplot.png")
+#ggsave("../results/plots/description_bmi_class_boxplot.png")
 
 ```
