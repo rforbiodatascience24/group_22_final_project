@@ -1,0 +1,23 @@
+---
+title: "tester"
+format: html
+editor: visual
+---
+
+### Loading libraries
+
+```{r}
+library(tidyverse)
+library(table1)
+library(patchwork)
+library(ggplot2)
+library(dplyr)
+library(gt)
+library(gridExtra)
+```
+
+### Download data
+
+```{r}
+merged_data <- read_tsv("../data/03_dat_augment_merged_data.tsv")
+```
