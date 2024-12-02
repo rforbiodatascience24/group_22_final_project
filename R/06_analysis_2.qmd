@@ -4,17 +4,17 @@ format: html
 editor: visual
 ---
 
-### Download data
-
-```{r}
-merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
-```
-
 ### Loading libraries
 
 ```{r}
 library(dplyr)
 library(ggplot2)
+```
+
+### Download data
+
+```{r}
+merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 ```{r}
