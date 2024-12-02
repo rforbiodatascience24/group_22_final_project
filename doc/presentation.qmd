@@ -27,11 +27,33 @@ format:
 library("tidyverse")
 ```
 
-- Bulletpoints in the middle
+## Untidy –\> Tidy data
 
-- Bulletpoints
+::: {style="margin-top: -15px; margin-bottom: -15px;"}
+::: {style="line-height: 1.1;"}
+1.  *Each variable is saved in its own column.*\
+2.  *Each observation is saved in its own row.*\
+3.  *Each "type" of observation is stored in a single table.*\
+:::
+:::
 
-- Bulletpoints
+::: panel-tabset
+### Dirty data
+
+```{r}
+#| echo: true
+ncbi_data <- read_tsv(here("data/01_ncbi_data.tsv.gz"))  # Read and display the gzipped TSV file
+print(head(ncbi_data, 10))  # Print the first 10 rows to display
+```
+
+### Clean data
+
+```{r}
+#| echo: true
+charctaristics_data <- read_tsv(here("data/01_ncbi_data.tsv.gz"))  # Read and display the gzipped TSV file
+print(head(ncbi_data, 10))  # Print the first 10 rows to display
+```
+:::
 
 
 <!--# ---------------------------------------------------------------------- -->
