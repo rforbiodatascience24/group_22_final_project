@@ -127,7 +127,7 @@ print(summary_data)  # Print table
 
 <!--# ---------------------------------------------------------------------- -->
 
-## Analysis of Data: Log2 Fold Expression
+## Analysis of Data: Log2 Fold Change
 
 ::: {.columns style="margin-left: 0px;"}
 ::: {.column style="margin-left: 0px; width: 40%;"}
@@ -155,7 +155,7 @@ print(summary_data)  # Print table
 -   Linear regression fitted to each gene based on smoking status and gene expression level
 -   0 represents non-smokers, 1 represents smokers
 -   b = intercept, a = estimate
--   Positive estimate indicates upregulation of gene in smokers
+-   Positive estimates indicate up-regulation of genes in smokers
 :::
 
 ::: {.column width="60%"}
@@ -184,7 +184,7 @@ Forest Plot:
 
 -   3 clusters may suggest genes within the same share regulatory mechanisms
 
--   One cluster of genes is down-regulated, while the two other are upregulated
+-   One cluster of genes is down-regulated, while the two other are up-regulated
 :::
 
 ::: {.column width="60%"}
@@ -206,7 +206,7 @@ Forest Plot:
 -   x-axis: estimates from linear regression analysis
 -   y-axis: statistical significance of the effect sizes
     -   Higher values, lower p-values
--   Few genes exhibit significant downregulation, while others show significant upregulation
+-   Few genes exhibit significant down-regulation, while others show significant up-regulation
 :::
 
 ::: {.column width="60%"}
@@ -235,4 +235,4 @@ Forest Plot:
 ### Conclusion
 
 -   Several gene probes represent very similar gene expression levels, resulting in several genes obtaining similar log2-fold-change and estimates in the linear regression
--   From our analysis, it is implicated that nearly all genes exhibit differential expression between smokers and non-smokers. Some genes exhibit a significant up- or downregulation, while most findings are not significant
+-   From our analysis, it is implicated that nearly all genes exhibit differential expression between smokers and non-smokers. Some genes exhibit a significant up- or down-regulation, while most findings are not significant
