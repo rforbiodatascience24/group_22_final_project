@@ -7,7 +7,7 @@ editor: visual
 ### Load data
 
 ```{r}
-merged_data <- read_tsv("../data/03_dat_augment_merged_data.tsv")
+merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 #### Packages
@@ -41,7 +41,7 @@ library(ggplot2)
 
 # Select the top 15 genes with the largest and the 15 genes with the smallest
 top_15_genes <- merged_log2_fold |>
-  arrange(desc(log2_fold_change)) |> 
+  arrange(desc(log2_fold_change)) |>
   slice(1:15)
 
 bottom_15_genes <- merged_log2_fold |>
