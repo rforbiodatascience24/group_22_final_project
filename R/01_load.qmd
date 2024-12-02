@@ -19,14 +19,12 @@ library(R.utils)
 library(httr)
 library(readr)
 library(stringr)
+library(ggplot2)
 library(tidyverse)
 library(dplyr)
+library(reshape2)
 library(jsonlite)
 library(illuminaio)
-library(quarto)
-```
-
-```{r}
 ```
 
 ### Load data directories
@@ -41,14 +39,15 @@ create_dir("../results/plots")
 ### Load files
 
 ```{r}
-file.info("../_raw/raw_annotation_cleaned.bgx")$size
+#| message: false
 raw_dir <- "../_raw/"
+#file.info("../_raw/raw_annotation_cleaned.bgx")$size
 
 download_dataset_ncbi(raw_dir)
-download_data_annotation_ncbi(raw_dir)
+#download_data_annotation_ncbi(raw_dir)
 
 ncbi_data <- read_ncbi_table(str_c(raw_dir, "raw_data_ncbi.txt.gz"))
-annotation_data <- read_bgx_file(raw_dir, "raw_annotation.bgx.gz")
+#annotation_data <- read_bgx_file(raw_dir, "raw_annotation.bgx.gz")
 
 ```
 
@@ -60,6 +59,6 @@ The files that we have just loaded above should be written to a tsv file in our 
 write_tsv(ncbi_data,
             file = "../data/01_ncbi_data.tsv.gz")
 
-write_tsv(annotation_data$probes,
-            file = "../data/01_ncbi_annot_probes.tsv.gz")
+#write_tsv(annotation_data$probes,
+            #file = "../data/01_ncbi_annot_probes.tsv.gz")
 ```
