@@ -131,7 +131,10 @@ print(summary_data)  # Print table
 
 ::: {.columns style="margin-left: 0px;"}
 ::: {.column style="margin-left: 0px; width: 40%;"}
--   Bulletpoints
+-   Log2 fold change calculated for each gene
+-   Positive log2 fold change: gene up-regulated in smokers
+-   Negative log2 fold change: gene down-regulated in smokers
+-   Nearly all genes are differently regulated in smokers vs. non-smokers
 :::
 
 ::: {.column width="60%"}
@@ -156,7 +159,7 @@ print(summary_data)  # Print table
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/XXX.png){width="100%"}
+![](../results/plots/linear_regression_plot.png)
 :::
 :::
 
@@ -185,7 +188,7 @@ Forest Plot:
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/XXX.png){width="100%"}
+![](../results/plots/genes_associated_with_smoking_significant1.png)
 :::
 :::
 
@@ -207,7 +210,7 @@ Forest Plot:
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/XXX.png){width="100%"}
+![](../results/plots/volcano_plot_p_value.png)
 :::
 :::
 
@@ -221,7 +224,13 @@ Forest Plot:
 
 ### Future Perspectives
 
--   
+-   Focus on gene clusters: location and function
+
+-   Explore if up/down-regulated genes act in specific placenta regions
+
+-   Examine how smoking impacts these areas
+
+-   Focus on genes with significant effects and larger effect sizes for further analysis
 
 ### Conclusion
 
