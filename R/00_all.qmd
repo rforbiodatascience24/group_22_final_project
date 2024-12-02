@@ -87,6 +87,10 @@ file.rename(from = "~/projects/group_22_final_project/R/05_analysis_1.html",
 #The analysis 6 file
 file.rename(from = "~/projects/group_22_final_project/R/06_analysis_2.html",
              to = "~/projects/group_22_final_project/results/06_analysis_2.html" )
+
+#The analysis 7 file
+file.rename(from = "~/projects/group_22_final_project/R/07_analysis_3.html",
+             to = "~/projects/group_22_final_project/results/07_analysis_3.html" )
 ```
 
 ```{r}
