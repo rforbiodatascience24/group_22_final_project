@@ -1,0 +1,80 @@
+---
+title: "All Files"
+format: html
+editor: source
+---
+
+```{r}
+library("here")
+library("quarto")
+```
+
+```{r}
+source(here("R/99_proj_func.R"))
+```
+
+```{r}
+quarto::quarto_render(here("R/01_load.qmd"), output_format = "html")
+```
+
+```{r}
+file.rename(here("R/01_load.html"), here("results/01_load.html"))
+```
+
+```{r}
+quarto::quarto_render(here("R/02_clean.qmd"), , output_format = "html")
+```
+
+```{r}
+file.rename(here("R/02_clean.html"), here("results/02_clean.html"))
+```
+
+```{r}
+
+quarto::quarto_render(here("R/03_augment.qmd"), , output_format = "html")
+```
+
+```{r}
+file.rename(here("R/03_augment.html"), here("results/03_augment.html"))
+```
+
+```{r}
+
+quarto::quarto_render(here("R/04_describe.qmd"), output_format = "html")
+```
+
+```{r}
+file.rename(here("R/04_describe.html"), here("results/04_describe.html"))
+```
+
+```{r}
+quarto::quarto_render(here("R/05_analysis_1.qmd"), output_format = "html")
+```
+
+```{r}
+file.rename(here("R/05_analysis_1.html"), here("results/05_analysis_1.html"))
+```
+
+```{r}
+quarto::quarto_render(here("R/06_analysis_2.qmd"), output_format = "html")
+```
+
+```{r}
+file.rename(here("R/06_analysis_2.html"), here("results/06_analysis_2.html"))
+```
+
+```{r}
+quarto:: quarto_render(here("R/07_analysis_3.qmd"), output_format = "html")
+```
+
+```{r}
+file.rename(here("R/07_analysis_3.html"), here("results/07_analysis_3.html"))
+```
+
+```{r}
+quarto:: quarto_render(here("R/08_analysis_4.qmd"), output_format = "html")
+```
+
+```{r}
+file.rename(here("R/08_analysis_4.html"), here("results/08_analysis_4.html"))
+```
