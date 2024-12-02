@@ -4,18 +4,27 @@ format: html
 editor: visual
 ---
 
-### Loading libraries
-
-```{r}
-library(dplyr)
-library(ggplot2)
-library(tidyverse)
-```
-
 ### Download data
 
 ```{r}
+<<<<<<< HEAD
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+=======
+merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
+>>>>>>> 29d078d0ab17e012ad832c67bb9ddd6f4083d01a
+```
+
+### Loading libraries
+
+```{r}
+<<<<<<< HEAD
 merged_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
+=======
+library(dplyr)
+library(ggplot2)
+>>>>>>> 29d078d0ab17e012ad832c67bb9ddd6f4083d01a
 ```
 
 ```{r}
