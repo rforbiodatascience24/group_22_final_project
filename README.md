@@ -6,7 +6,7 @@ editor_options:
 
 ### Group 22 - The Effect of Maternal Tobacco Smoke Exposure on the Placental Transcriptome
 
-#### Contributors: 
+#### Contributors:
 
 Anna Rantzau Pugerup Rasmussen, s215071
 
@@ -18,7 +18,7 @@ Nicoline Seehausen Hansen, s203530
 
 Ulrikke Marie Feldbæk Furland, s204526
 
-#### Data Description 
+#### Data Description
 
 The data that we have used, is from a study that investigates how
 smoking during pregnancy influences gene expression in the placenta.

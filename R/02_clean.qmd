@@ -75,7 +75,7 @@ tidy_characteristics <- tidy_characteristics |>
 print(head(tidy_characteristics))
 ```
 
-### Adding gene names from annotation file 
+### Adding gene names from annotation file
 
 ```{r}
 # Ensure the column names match

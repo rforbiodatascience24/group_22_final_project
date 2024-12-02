@@ -4,17 +4,18 @@ format: html
 editor: visual
 ---
 
-### Download data
-
-```{r}
-placental_gene_expr_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
-```
-
 ### Loading libraries
 
 ```{r}
 library(dplyr)
 library(ggplot2)
+library(tidyverse)
+```
+
+### Download data
+
+```{r}
+placental_gene_expr_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 ```{r}
