@@ -26,17 +26,30 @@ library("ggrepel")
 source("../R/99_proj_func.R")
 ```
 
-## Study description
-This study is about....
+## Study Description
+
+-   Gene expression profiling on placentas from women exposed to smoke during pregnancy and women not exposed to smoke
+
+-   Raw data
+
+    -   Sample_ID
+
+    -   Characteristics: e.g. age, bmi, week of delivery, and smoking status
+
+    -   Gene probes
+
+-   Annotation file
 
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
 
-## Data cleaning and wrangling
+## Data Cleaning and Wrangling
 
 ::: panel-tabset
-### Dirty data
+### Dirty Data
 
 ```{r}
 #| echo: true
@@ -44,7 +57,7 @@ ncbi_data <- read_tsv(here("data/01_ncbi_data.tsv.gz"))  # Read and display the 
 print(head(ncbi_data, 10))  # Print the first 10 rows to display
 ```
 
-### Characteristics data
+### Characteristics Data
 
 ```{r}
 #| echo: true
@@ -52,7 +65,7 @@ characteristics_data <- read_tsv(here("data/02_dat_clean_characteristics.tsv")) 
 print(head(characteristics_data, 10))  # Print the first 10 rows to display
 ```
 
-### Genes data
+### Genes Data
 
 ```{r}
 #| echo: true
@@ -60,21 +73,22 @@ genes_data <- read_tsv(here("data/02_dat_clean_genes.tsv"))  # Read gene data
 print(head(genes_data, 10))  # Print the first 10 rows to display
 ```
 
-### Clean Merged data
+### Clean Merged Data
+
 ```{r}
 #| echo: true
 clean_data <- read_tsv(here("data/02_dat_clean.tsv"))  # Read clean merged data
 print(head(clean_data, 10))  # Print the first 10 rows to display
 ```
-
-
 :::
 
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
 
-## Decription of data 
+## Decription of Data
 
 ```{r}
 #| echo: true
@@ -82,128 +96,152 @@ summary_data <- read_csv(here("results/description_table.csv"))  # Read sammary 
 print(summary_data)  # Print table
 ```
 
-
-- Important characteristics for pregnancy
-- Difference in age
+-   Important characteristics for pregnancy
+-   Difference in age
 
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
-## Description of data
-:::: {.columns}
 
+## Description of Data
+
+::: columns
 ::: {.column width="40%"}
-- Little to no difference in placental volume
-- Surprising as children of smokers have a lower birth weight [1] 
-- Possible lifestyle or physiological factors linked to smoking 
+-   Little to no difference in placental volume
+-   Surprising as children of smokers have a lower birth weight \[1\]
+-   Possible lifestyle or physiological factors linked to smoking
 
-[1] Kataoka, M. C., Carvalheira, A. P. P., Ferrari, A. P., Malta, M. B., de Barros Leite Carvalhaes, M. A., & de Lima Parada, C. M. G. (2018). Smoking during pregnancy and harm reduction in birth weight: a cross-sectional study. BMC pregnancy and childbirth, 18, 1-10.
+\[1\] Kataoka, M. C., Carvalheira, A. P. P., Ferrari, A. P., Malta, M. B., de Barros Leite Carvalhaes, M. A., & de Lima Parada, C. M. G. (2018). Smoking during pregnancy and harm reduction in birth weight: a cross-sectional study. BMC pregnancy and childbirth, 18, 1-10.
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/description_combined_plot1.png){width=80%}
+![](../results/plots/description_combined_plot1.png){width="80%"}
+:::
 :::
 
-::::
-
-
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
-## Analysis of data
 
-:::: {.columns style="margin-left: 0px;"}
+## Analysis of Data: Log2 Fold Expression
 
+::: {.columns style="margin-left: 0px;"}
 ::: {.column style="margin-left: 0px; width: 40%;"}
-- Bulletpoints 
+-   Bulletpoints
 :::
-
 
 ::: {.column width="60%"}
-![](../results/plots/upregulated_downregulated_genes.png){width=150%}
+![](../results/plots/upregulated_downregulated_genes.png){width="150%"}
+:::
 :::
 
-::::
-
-
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
-## Analysis of data
 
-:::: {.columns}
+## Analysis of Data: Linear Regression Analysis
 
+::: columns
 ::: {.column width="40%"}
-- Bulletpoints 
+-   Linear regression fitted to each gene based on smoking status and gene expression level
+-   0 represents non-smokers, 1 represents smokers
+-   b = intercept, a = estimate
+-   Positive estimate indicates upregulation of gene in smokers
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/XXX.png){width=100%}
+![](../results/plots/XXX.png){width="100%"}
+:::
 :::
 
-::::
-
-
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
-## Analysis of data
 
-:::: {.columns}
+## Analysis of Data: Forest Plot
 
+::: columns
 ::: {.column width="40%"}
-- Bulletpoints 
+Significant Values:
+
+-   No significant q-values (q\<0.05)
+-   Significant p-values (p\<0.05) found
+
+Forest Plot:
+
+-   Significant estimates and corresponding error bars
+
+-   3 clusters may suggest genes within the same share regulatory mechanisms
+
+-   One cluster of genes is down-regulated, while the two other are upregulated
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/XXX.png){width=100%}
+![](../results/plots/XXX.png){width="100%"}
+:::
 :::
 
-::::
-
-
-
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
-## Analysis of data
 
-:::: {.columns}
+## Analysis of Data: Volcano Plot
 
+::: columns
 ::: {.column width="40%"}
-- Bulletpoints 
+-   Volcano plot with few data points
+-   x-axis: estimates from linear regression analysis
+-   y-axis: statistical significance of the effect sizes
+    -   Higher values, lower p-values
+-   Few genes exhibit significant downregulation, while others show significant upregulation
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/XXX.png){width=100%}
+![](../results/plots/XXX.png){width="100%"}
 :::
-::::
-
+:::
 
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
-## Analysis of data
 
-:::: {.columns}
+## SLET
 
+::: columns
 ::: {.column width="40%"}
-- Bulletpoints 
+-   Bulletpoints
 :::
 
 ::: {.column width="60%"}
-![](../results/plots/XXX.png){width=100%}
+![](../results/plots/XXX.png){width="100%"}
+:::
 :::
 
-::::
-
 <!--# ---------------------------------------------------------------------- -->
+
 <!--# SLIDE ---------------------------------------------------------------- -->
+
 <!--# ---------------------------------------------------------------------- -->
-## Conclusion
-- bulletpoints
 
+## Future Perspectives & Conclusion
 
-### Future
-- bulletpoints
+### Future Perspectives
 
+-   
+
+### Conclusion
+
+-   Several gene probes represent very similar gene expression levels, resulting in several genes obtaining similar log2-fold-change and estimates in the linear regression
+-   From our analysis, it is implicated that nearly all genes exhibit differential expression between smokers and non-smokers. Some genes exhibit a significant up- or downregulation, while most findings are not significant
