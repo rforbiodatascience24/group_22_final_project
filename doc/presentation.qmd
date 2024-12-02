@@ -1,16 +1,23 @@
 ---
-title: "Study of Smoking During Pregnancy"
-format:
+title: "The Effect of Maternal Tobacco Smoke Exposure on the Placental Transcriptome"
+author: |
+  Anna Rasmussen  
+  Ida Meyer-Kristensen  
+  Mathilde Stenholt  
+  Nicoline Hansen  
+  Ulrikke Furland  
+format: 
   revealjs:
-    embed-resources: true
-    theme: sky
-    slide-number: c/t
-    width: 1600
-    height: 900
-    mainfont: timesnewroman
-    logo: images/r4bds_logo_small.png
-    footer: "R for Bio Data Science"
+    self-contained: true
+    code-line-numbers: true
+    smaller: true
+    scroll: true
+    theme: moon
+    transition: slide
+editor: visual
 ---
+
+
 ```{r}
 library("tidyverse")
 library("readr")
@@ -39,9 +46,10 @@ library("tidyverse")
 
 ::: {style="margin-top: -15px; margin-bottom: -15px;"}
 ::: {style="line-height: 1.1;"}
-1.  *Each variable is saved in its own column.*\
-2.  *Each observation is saved in its own row.*\
-3.  *Each "type" of observation is stored in a single table.*\
+1. Each variable is a column; each column is a variable.\ 
+2. Each observation is a row; each row is an observation.\
+3. Each value is a cell; each cell is a single value.\
+
 :::
 :::
 
@@ -58,7 +66,7 @@ print(head(ncbi_data, 10))  # Print the first 10 rows to display
 
 ```{r}
 #| echo: true
-characteristics_data <- read_tsv(here("02_dat_clean_characteristics.tsv.gz"))  # Read and display the gzipped TSV file
+characteristics_data <- read_tsv(here("data/02_dat_clean_characteristics.tsv"))  # Read characteristics data
 print(head(characteristics_data, 10))  # Print the first 10 rows to display
 ```
 
@@ -66,14 +74,14 @@ print(head(characteristics_data, 10))  # Print the first 10 rows to display
 
 ```{r}
 #| echo: true
-genes_data <- read_tsv(here("02_dat_clean_genes.tsv.gz"))  # Read and display the gzipped TSV file
+genes_data <- read_tsv(here("data/02_dat_clean_genes.tsv"))  # Read gene data
 print(head(genes_data, 10))  # Print the first 10 rows to display
 ```
 
-### Clean data
+### Clean Merged data
 ```{r}
 #| echo: true
-clean_data <- read_tsv(here("02_dat_clean.tsv.gz"))  # Read and display the gzipped TSV file
+clean_data <- read_tsv(here("data/02_dat_clean.tsv"))  # Read clean merged data
 print(head(clean_data, 10))  # Print the first 10 rows to display
 ```
 
