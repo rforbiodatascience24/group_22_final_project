@@ -4,6 +4,14 @@ format: html
 editor: visual
 ---
 
+### Download data
+
+```{r}
+merged_data <- read_tsv("../data/03_dat_augment_merged_data.tsv")
+```
+
+### Loading libraries
+
 ```{r}
 #| message: false
 library(tidyverse)

@@ -4,7 +4,11 @@ format: html
 editor: visual
 ---
 
-## Bar plots
+### Load data
+
+```{r}
+merged_data <- read_tsv("../data/03_dat_augment_merged_data.tsv")
+```
 
 #### Packages
 
