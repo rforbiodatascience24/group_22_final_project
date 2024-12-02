@@ -120,7 +120,7 @@ placental_gene_expr_log2_fold <- placental_gene_expr_log2_fold |>
   ))
 ```
 
-### Saving the data in a tsv file
+### Saving the data in TSV files
 
 ```{r}
 # Save the merged dataset to a tsv file
