@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+_raw/
+data/
+results/Plots/
+doc/presentation_files/
