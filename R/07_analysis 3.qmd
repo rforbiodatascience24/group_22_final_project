@@ -236,6 +236,7 @@ merged_estimates_p |>
   theme_minimal(base_size = 16) +
   theme(plot.title = element_text(hjust = 1, size = 11),
         axis.title = element_text(size = 10),
+        axis.text.y = element_blank(),  # Remove y-axis labels
         axis.text = element_text(size = 5),
         plot.caption = element_text(size = 7)) +
   labs(x = "Estimates (95%CIs)",
@@ -266,7 +267,7 @@ Therefore, we selected three genes to represent the three different clusters. Ne
 ```{r}
 # Looking at the linear regressions for three probe_IDs representing each of the 3 different estimated
 lr_ilmn_1651278 <- merged_clean_aug_long |>
-  filter(gene == "ilmn_1651278") |>  
+  filter(gene == "ilmn_1651278_snip1") |>  
   ggplot(aes(x = status_num, 
              y = log2_expr,
              color = factor(status_num))) +
@@ -278,14 +279,14 @@ lr_ilmn_1651278 <- merged_clean_aug_long |>
   theme(plot.caption = element_text(size = 8)) +
   labs(x = "Status",
        y = "Log2 Expr. level",
-       title = "Probe_ID: ilmn_1651278",
+       title = "Probe_ID: ilmn_1651278_snip1",
        color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels
   
 
 lr_ilmn_1651375 <- merged_clean_aug_long |>
-  filter(gene == "ilmn_1651375") |>  
+  filter(gene == "ilmn_1651375_bicd2") |>  
   ggplot(aes(x = status_num, 
              y = log2_expr,
              color = factor(status_num))) +
@@ -297,14 +298,14 @@ lr_ilmn_1651375 <- merged_clean_aug_long |>
   theme(plot.caption = element_text(size = 8)) +
   labs(x = "Status",
     y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651375",
+    title = "Probe_ID: ilmn_1651375_bicd2",
     color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels)
 
 
 lr_ilmn_1651767 <- merged_clean_aug_long |>
-  filter(gene == "ilmn_1651767") |>  
+  filter(gene == "ilmn_1651767_mkl1") |>  
   ggplot(aes(x = status_num, 
              y = log2_expr,
              color=factor(status_num))) +
@@ -316,7 +317,7 @@ lr_ilmn_1651767 <- merged_clean_aug_long |>
   theme(plot.caption = element_text(size = 8)) +
  labs(x = "Status",
     y = "Log2 Expr. level",
-    title = "Probe_ID: ilmn_1651767",
+    title = "Probe_ID: ilmn_1651767_mkl1",
     color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels))
@@ -343,7 +344,7 @@ ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, he
 
 ```{r}
 merged_estimates_p |> 
-  filter(gene %in% c("ilmn_1651278", "ilmn_1651375", "ilmn_1651767")) |> 
+  filter(gene %in% c("ilmn_1651278_snip1", "ilmn_1651375_bicd2", "ilmn_1651767_mkl1")) |> 
   ggplot(aes(x = estimate,
              y = fct_reorder(gene, estimate),
              xmin = conf.low,

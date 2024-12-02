@@ -7,7 +7,7 @@ editor: visual
 ### Load data
 
 ```{r}
-merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
+merged_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 #### Packages
@@ -28,7 +28,6 @@ top_genes <- merged_log2_fold |>
   select(-abs_log2_fold_change) 
 
 print(top_genes)
-
 ```
 
 #### Plotting the top 15 and bottom 15
@@ -78,75 +77,4 @@ ggplot(selected_genes_long, aes(x = gene, y = Expression, fill = Status)) +
 
 ```
 
-#### Comparing gene expression of genes referred to in article of smokers and non-smokers
-
-```{r}
-# Selecting relevant columns
-selected_genes <- merged_data |> 
-  # Genes from article
-  select(status, ilmn_1693338, ilmn_1714167, ilmn_1706643, ilmn_1701308, ilmn_1785272, ilmn_1717163, ilmn_1805543, ilmn_1779558)
-
-mean_expression <- selected_genes |> 
-  pivot_longer(
-    cols = starts_with("ilmn"), # Reshape columns that starts with ilmn
-    names_to = "Gene",          # Name of the new column for genes
-    values_to = "Expression"    # Name of the new column for gene expressions
-  ) |> 
-  group_by(status, Gene) |>     # Group by status and Gene
-  summarise(MeanExpression = mean(Expression, na.rm = TRUE), .groups = "drop")
-
-# Showing the result
-print(mean_expression)
-```
-
-#### Plotting
-
-```{r}
-
-# Create the bar plot
-ggplot(mean_expression, aes(x = Gene, 
-                            y = MeanExpression, 
-                            fill = status)) +
-  geom_col(position = "dodge") +
-  labs(
-    title = "Mean Gene Expression by Smoking Status",
-    x = "Gene",
-    y = "Mean Expression",
-    fill = "Status"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, 
-                                   hjust = 1))
-
-```
-
-```{r}
-# Load necessary library
-library(dplyr)
-library(tidyr)
-
-# Selecting relevant columns from `merged_log2_fold_change`
-selected_genes <- merged_log2_fold |> 
-  select(gene, `non-smoker`, smoker, log2_fold_change, p_value) # Adjust columns as needed
-
-# Pivot the data into a long format for ggplot2
-long_format <- selected_genes |> 
-  pivot_longer(
-    cols = c(`non-smoker`, smoker), # Select columns to reshape
-    names_to = "Status",            # Column for smoker vs non-smoker
-    values_to = "Expression"        # Column for gene expression values
-  )
-
-# Create a bar plot
-ggplot(long_format, aes(x = gene, y = Expression, fill = Status)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(
-    title = "Gene Expression by Smoking Status",
-    x = "Gene",
-    y = "Expression",
-    fill = "Status"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-```
+#### 

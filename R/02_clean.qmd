@@ -73,87 +73,72 @@ tidy_characteristics <- tidy_characteristics |>
 
 # Printing the top of the tidy_characteristics data 
 print(head(tidy_characteristics))
-
 ```
 
 ### DET HER ER DET NYE
 
 ```{r}
 # Ensure the column names match
-#ncbi_genes_dirty <- ncbi_genes_dirty |> 
-#  rename(Probe_Id = col_1)
+ncbi_genes_dirty <- ncbi_genes_dirty |> 
+  rename(Probe_Id = col_1)
 
 # Perform a right join to add the ILMN_Gene column
-#merged_data <- ncbi_annot_probes |> 
-#  select(Probe_Id, ILMN_Gene) |> 
-#  right_join(ncbi_genes_dirty, by = "Probe_Id") |>
-#      relocate(ILMN_Gene, .after = Probe_Id)|> 
-#              select(-1) |> 
-#              mutate(ILMN_Gene = paste("gene_", ILMN_Gene, sep = "")) |>
-#              rename(col_1 = ILMN_Gene)
-#merged_data
+merged_data <- ncbi_annot_probes |> 
+  select(Probe_Id, ILMN_Gene) |> 
+  right_join(ncbi_genes_dirty, by = "Probe_Id") |>
+  relocate(ILMN_Gene, .after = Probe_Id)|> 
+  mutate(ILMN_Gene = paste(Probe_Id, ILMN_Gene, sep = "_")) |>  # Combine Probe_Id and ILMN_Gene
+    select(-1) |>
+  rename(col_1 = ILMN_Gene)
+merged_data
 ```
 
 ```{r}
-# Perform a left join to add the ILMN_Gene column
-#merged_data <- ncbi_genes_dirtyo |> 
-#  left_join(ncbi_annot_probes |> 
-#              select(Probe_Id, ILMN_Gene), by = "Probe_Id") |> 
-#              relocate(ILMN_Gene, .after = Probe_Id) |> 
-#              select(-1) |> 
-#              mutate(ILMN_Gene = paste("gene_", ILMN_Gene, sep = "")) |> 
-#              rename(col_1 = ILMN_Gene)
+tidy_genes <- merged_data |> 
+  pivot_longer(cols = -col_1,                  # everything but col1
+               names_to = "Sample",
+               values_to = "Expression") |> 
+  pivot_wider(names_from = col_1,             # col1 contains the genes
+              values_from = Expression) |>    # all expression values
+  mutate(Sample_ID = sample_ids[seq_len(n_distinct(Sample))]) |>   # adding the sample_IDs in a new column
+  relocate(Sample_ID)   # moving Sample_ID to the first column
 
-# View the resulting dataset
-#print(head(merged_data))
-```
-
-```{r}
-# Transposing and tidying the gene expression data
-#tidy_genes <- merged_data |> 
-#  pivot_longer(cols = -col_1,                  # everything but col1
-#               names_to = "Sample",
-#               values_to = "Expression") |> 
-#  group_by(Sample, col_1) |>        # Ensure unique keys
-  #summarise(Expression = mean(as.numeric(Expression), na.rm = TRUE), .groups = "drop") |> 
-#  pivot_wider(names_from = col_1,             # col1 contains the genes
-#              values_from = Expression) |>    # all expression values
-#  mutate(Sample_ID = sample_ids[seq_len(n())]) |>   # adding the sample_IDs in a new column
-#  relocate(Sample_ID)   # moving Sample_ID to the first column
-
-#tidy_genes
+print(head(tidy_genes))
+tidy_genes
 
 # Removing the sample column and dropping NAs
-#tidy_genes <- tidy_genes |> 
-#  select(-Sample) |>   # selecting everything but the "Sample" column
-#  mutate(across(where(is.character), ~ na_if(., "not available"))) |>  # replace "not available" with NA
-#  drop_na()                                   # dropping all NA values
+tidy_genes <- tidy_genes |> 
+  ungroup() |>  # Remove any grouping by Sample
+  select(-Sample) |>   # selecting everything but the "Sample" column
+  mutate(across(where(is.character), ~ na_if(., "not available"))) |>  # replace "not available" with NA
+  drop_na()                                   # dropping all NA values
 
 # Printing the top of the tidy_genes data 
-#print(head(tidy_genes))
+print(tidy_genes)
 ```
 
 ### Tidying gene expression data
 
 ```{r}
 # Transposing and tidying the gene expression data
-tidy_genes <- ncbi_genes_dirty |> 
-  pivot_longer(cols = -col_1,                  # everything but col1
-               names_to = "Sample",
-               values_to = "Expression") |> 
-  pivot_wider(names_from = col_1,             # col1 contains the genes
-              values_from = Expression) |>    # all expression values
-  mutate(Sample_ID = sample_ids[seq_len(n())]) |>   # adding the sample_IDs in a new column
-  relocate(Sample_ID)  # moving Sample_ID to the first column
-tidy_genes
+#tidy_genes <- ncbi_genes_dirty |> 
+#  pivot_longer(cols = -col_1,                  # everything but col1
+#               names_to = "Sample",
+#               values_to = "Expression") |> 
+#  pivot_wider(names_from = col_1,             # col1 contains the genes
+#              values_from = Expression) |>    # all expression values
+#  mutate(Sample_ID = sample_ids[seq_len(n())]) |>   # adding the sample_IDs in a new column
+#  relocate(Sample_ID)  # moving Sample_ID to the first column
+#tidy_genes
+
 # Removing the sample column and dropping NAs
-tidy_genes <- tidy_genes |> 
-  select(-Sample) |>   # selecting everything but the "Sample" column
-  mutate(across(everything(), ~ na_if(., "not available"))) |>  # replace "not available" with NA
-  drop_na()                                   # dropping all NA values
+#tidy_genes <- tidy_genes |> 
+#  select(-Sample) |>   # selecting everything but the "Sample" column
+#  mutate(across(everything(), ~ na_if(., "not available"))) |>  # replace "not available" with NA
+#  drop_na()                                   # dropping all NA values
 
 # Printing the top of the tidy_genes data 
-print(head(tidy_genes))
+#print(head(tidy_genes))
 ```
 
 ### Cleaning column names
@@ -184,7 +169,7 @@ print(colnames(tidy_characteristics))
 # Merge the two datasets by `sample_id`
 merged_data <- tidy_characteristics |> 
   left_join(tidy_genes, by = "sample_id")  # Joining the two datasets on sample_ID
-
+merged_data
 # Convert columns to numeric values
 cols_not_to_convert <- c("sample_id", 
                          "status", 

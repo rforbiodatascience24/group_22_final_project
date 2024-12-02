@@ -91,7 +91,8 @@ merged_log2_fold <- merged_data |>
   #Calculate the log2_fold_change for each gene             
               values_from = mean_expr) |> 
   mutate(log2_fold_change = log2(`smoker` / `non-smoker`))
- 
+merged_log2_fold
+
 p_values <- merged_data |>
   pivot_longer(cols = all_of(gene_cols),
                names_to = "gene",
