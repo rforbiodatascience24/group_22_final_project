@@ -12,50 +12,85 @@ library("quarto")
 #### Rendering of the sub-documents
 
 ```{r}
+#The load file
 quarto::quarto_render(
     input = "~/projects/group_22_final_project/R/01_load.qmd",
     output_format = "html"
 )
 
+#The clean file
 quarto::quarto_render(
     input = "~/projects/group_22_final_project/R/02_clean.qmd",
     output_format = "html"
 )
 
+#The augment file
 #MANGLER!!!! Virker ikke
 quarto::quarto_render(
     input = "~/projects/group_22_final_project/R/03_augment.qmd",
     output_format = "html"
 )
 
+#The describe file
 quarto::quarto_render(
     input = "~/projects/group_22_final_project/R/04_describe.qmd",
+    output_format = "html"
+)
+
+#The analysis 5 file
+quarto::quarto_render(
+    input = "~/projects/group_22_final_project/R/05_analysis_1.qmd",
+    output_format = "html"
+)
+
+#The analysis 6 file
+quarto::quarto_render(
+    input = "~/projects/group_22_final_project/R/06_analysis_2.qmd",
+    output_format = "html"
+)
+
+#The analysis 7 file
+quarto::quarto_render(
+    input = "~/projects/group_22_final_project/R/07_analysis_3.qmd",
     output_format = "html"
 )
 
 
 
 
-quarto::quarto_render("~/projects/group_22_final_project/R/03_augment.qmd")
 
-quarto::quarto_render("~/projects/group_22_final_project/R/04_describe.qmd")
-quarto::quarto_render("~/projects/group_22_final_project/R/05_analysis_1.qmd")
-quarto::quarto_render("~/projects/group_22_final_project/R/06_analysis_2.qmd")
-quarto::quarto_render("~/projects/group_22_final_project/R/07_analysis_3.qmd")
 ```
 
 #### Moving the rendered file to the results folder
 
 ```{r}
+#The load file
 file.rename(from = "~/projects/group_22_final_project/R/01_load.html",
              to = "~/projects/group_22_final_project/results/01_load.html" )
 
+#The clean file
 file.rename(from = "~/projects/group_22_final_project/R/02_clean.html",
              to = "~/projects/group_22_final_project/results/02_clean.html" )
 
-##MANGLER - VIRKER IKKE
+#The augment file
 file.rename(from = "~/projects/group_22_final_project/R/03_augment.html",
              to = "~/projects/group_22_final_project/results/03_augment.html" )
+
+#The describe file
+file.rename(from = "~/projects/group_22_final_project/R/04_describe.html",
+             to = "~/projects/group_22_final_project/results/04_describe.html" )
+
+#The analysis 5 file
+file.rename(from = "~/projects/group_22_final_project/R/05_analysis_1.html",
+             to = "~/projects/group_22_final_project/results/05_analysis_1.html" )
+
+#The analysis 6 file
+file.rename(from = "~/projects/group_22_final_project/R/06_analysis_2.html",
+             to = "~/projects/group_22_final_project/results/06_analysis_2.html" )
+
+#The analysis 7 file
+file.rename(from = "~/projects/group_22_final_project/R/07_analysis_3.html",
+             to = "~/projects/group_22_final_project/results/07_analysis_3.html" )
 ```
 
 ```{r}

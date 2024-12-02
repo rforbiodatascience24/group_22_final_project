@@ -75,7 +75,7 @@ tidy_characteristics <- tidy_characteristics |>
 print(head(tidy_characteristics))
 ```
 
-### DET HER ER DET NYE
+### Adding gene names from annotation file
 
 ```{r}
 # Ensure the column names match
@@ -83,18 +83,20 @@ ncbi_genes_dirty <- ncbi_genes_dirty |>
   rename(Probe_Id = col_1)
 
 # Perform a right join to add the ILMN_Gene column
-merged_data <- ncbi_annot_probes |> 
+placental_gene_expr <- ncbi_annot_probes |> 
   select(Probe_Id, ILMN_Gene) |> 
   right_join(ncbi_genes_dirty, by = "Probe_Id") |>
   relocate(ILMN_Gene, .after = Probe_Id)|> 
   mutate(ILMN_Gene = paste(Probe_Id, ILMN_Gene, sep = "_")) |>  # Combine Probe_Id and ILMN_Gene
     select(-1) |>
   rename(col_1 = ILMN_Gene)
-merged_data
+placental_gene_expr
 ```
 
+### Tidying gene expression data
+
 ```{r}
-tidy_genes <- merged_data |> 
+tidy_genes <- placental_gene_expr |> 
   pivot_longer(cols = -col_1,                  # everything but col1
                names_to = "Sample",
                values_to = "Expression") |> 
@@ -115,30 +117,6 @@ tidy_genes <- tidy_genes |>
 
 # Printing the top of the tidy_genes data 
 print(tidy_genes)
-```
-
-### Tidying gene expression data
-
-```{r}
-# Transposing and tidying the gene expression data
-#tidy_genes <- ncbi_genes_dirty |> 
-#  pivot_longer(cols = -col_1,                  # everything but col1
-#               names_to = "Sample",
-#               values_to = "Expression") |> 
-#  pivot_wider(names_from = col_1,             # col1 contains the genes
-#              values_from = Expression) |>    # all expression values
-#  mutate(Sample_ID = sample_ids[seq_len(n())]) |>   # adding the sample_IDs in a new column
-#  relocate(Sample_ID)  # moving Sample_ID to the first column
-#tidy_genes
-
-# Removing the sample column and dropping NAs
-#tidy_genes <- tidy_genes |> 
-#  select(-Sample) |>   # selecting everything but the "Sample" column
-#  mutate(across(everything(), ~ na_if(., "not available"))) |>  # replace "not available" with NA
-#  drop_na()                                   # dropping all NA values
-
-# Printing the top of the tidy_genes data 
-#print(head(tidy_genes))
 ```
 
 ### Cleaning column names
@@ -167,28 +145,28 @@ print(colnames(tidy_characteristics))
 
 ```{r}
 # Merge the two datasets by `sample_id`
-merged_data <- tidy_characteristics |> 
+placental_gene_expr <- tidy_characteristics |> 
   left_join(tidy_genes, by = "sample_id")  # Joining the two datasets on sample_ID
-merged_data
+placental_gene_expr
 # Convert columns to numeric values
 cols_not_to_convert <- c("sample_id", 
                          "status", 
                          "mode_of_delivery")
-cols_to_convert <- setdiff(colnames(merged_data), 
+cols_to_convert <- setdiff(colnames(placental_gene_expr), 
                            cols_not_to_convert)
-merged_data[cols_to_convert] <- lapply(merged_data[cols_to_convert], 
+placental_gene_expr[cols_to_convert] <- lapply(placental_gene_expr[cols_to_convert], 
                                        function(x) as.numeric(as.character(x)))
 
 
 # Checking the merged data
-print(head(merged_data))
+print(head(placental_gene_expr))
 ```
 
 ### Saving the final merged data to a tsv file
 
 ```{r}
 # Save the merged dataset to a tsv file
-write_tsv(merged_data,
+write_tsv(placental_gene_expr,
           file = "../data/02_dat_clean.tsv")
 write_tsv(tidy_characteristics,
           file = "../data/02_dat_clean_characteristics.tsv")
@@ -196,5 +174,3 @@ write_tsv(tidy_genes,
           file = "../data/02_dat_clean_genes.tsv")
 
 ```
-
-

@@ -4,13 +4,7 @@ format: html
 editor: visual
 ---
 
-### Load data
-
-```{r}
-merged_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
-```
-
-#### Packages
+### Packages
 
 ```{r}
 library(ggplot2)
@@ -18,19 +12,13 @@ library(dplyr)
 library(tidyverse)
 ```
 
-#### Extract the top 100 genes with the largest absolute log2_fold_change
+### Load data
 
 ```{r}
-top_genes <- merged_log2_fold |>
-  mutate(abs_log2_fold_change = abs(log2_fold_change)) |> 
-  arrange(desc(abs_log2_fold_change)) |>
-  slice_head(n = 100) |>
-  select(-abs_log2_fold_change) 
-
-print(top_genes)
+placental_gene_expr_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
-#### Plotting the top 15 and bottom 15
+### Plotting the top 15 and bottom 15
 
 ```{r}
 # Load libraries
@@ -39,12 +27,12 @@ library(tidyr)
 library(ggplot2)
 
 # Select the top 15 genes with the largest and the 15 genes with the smallest
-top_15_genes <- merged_log2_fold |>
+top_15_genes <- placental_gene_expr_log2_fold |>
   filter(p_value < 0.05) |> 
   arrange(desc(log2_fold_change)) |>
   slice(1:15)
 
-bottom_15_genes <- merged_log2_fold |>
+bottom_15_genes <- placental_gene_expr_log2_fold |>
   filter(p_value < 0.05) |> 
   arrange(log2_fold_change) |>
   slice(1:15)

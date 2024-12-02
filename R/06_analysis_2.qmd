@@ -4,22 +4,23 @@ format: html
 editor: visual
 ---
 
-### Download data
-
-```{r}
-merged_data <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
-```
-
 ### Loading libraries
 
 ```{r}
 library(dplyr)
 library(ggplot2)
+library(tidyverse)
+```
+
+### Download data
+
+```{r}
+placental_gene_expr_log2_fold <- read_tsv("../data/03_dat_augment_log2_fold.tsv")
 ```
 
 ```{r}
 # Count how many p-values are under 0.05 and thereby significantly different
-significant_genes_count <- merged_log2_fold |>
+significant_genes_count <- placental_gene_expr_log2_fold |>
   filter(p_value < 0.05) |>
   summarise(count = n())
 
@@ -27,7 +28,7 @@ print(significant_genes_count)
 ```
 
 ```{r}
-ggplot(merged_log2_fold, aes(x = log2_fold_change, y = -log10(p_value))) +
+ggplot(placental_gene_expr_log2_fold, aes(x = log2_fold_change, y = -log10(p_value))) +
   geom_point() +
   geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "#F9A1A1") +
   labs(x = "Log2 Fold Change", y = "-log10(p-value)", title = "Volcano Plot")
@@ -36,7 +37,7 @@ ggplot(merged_log2_fold, aes(x = log2_fold_change, y = -log10(p_value))) +
 ### Plot of up- and downregulated genes in smokers
 
 ```{r}
-ggplot(merged_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_change, fill = Regulation)) +
+ggplot(placental_gene_expr_log2_fold, aes(x = reorder(gene, log2_fold_change), y = log2_fold_change, fill = Regulation)) +
   geom_bar(stat = "identity", width = 0.8) + 
   coord_flip() +  # Flip coordinates so the plot is more interpretable 
   scale_fill_manual(values = c("Upregulated" = "#63B8B8", "Downregulated" = "#F9A1A1")) +

@@ -4,10 +4,16 @@ format: html
 editor: visual
 ---
 
+### Loading packages
+
+```{r}
+library(tidyverse)
+```
+
 ### Loading the data
 
 ```{r}
-merged_data <- read_tsv("../data/02_dat_clean.tsv")
+placental_gene_expr <- read_tsv("../data/02_dat_clean.tsv")
 ```
 
 ### Creating BMI classes, and dividing the mothers
@@ -17,7 +23,7 @@ merged_data <- read_tsv("../data/02_dat_clean.tsv")
 #| echo: true
 
 # Dividing BMI into seven classes
-merged_data <- merged_data |> 
+placental_gene_expr <- placental_gene_expr |> 
   # Making the conversion table code
   mutate(bmi_class = case_when(maternal_bmi < 16.5 ~ "Severely underweight",
                                16.5 <= maternal_bmi & maternal_bmi < 18.5 ~ "Underweight",
@@ -26,7 +32,7 @@ merged_data <- merged_data |>
                                maternal_bmi >= 30 & maternal_bmi < 35 ~ "Obesity class I",
                                maternal_bmi >= 35 & maternal_bmi < 40 ~ "Obesity class II",
                                maternal_bmi >= 40 ~ "Obesity class III")) |>
-  # Adding it as column in merged_data
+  # Adding it as column in placental_gene_expr
   mutate(bmi_class = factor(bmi_class,
                             levels = c("Severely underweight",
                                        "Underweight",
@@ -38,13 +44,13 @@ merged_data <- merged_data |>
                                        "Obesity class III"))) |>
   relocate(bmi_class,
            .after = maternal_bmi) #Moving the column bmi_class to the correct place and divided as we want. 
-print(head(merged_data))
+print(head(placental_gene_expr))
 ```
 
 ### Dividing the mothers into age groups
 
 ```{r}
-merged_data <- merged_data |> 
+placental_gene_expr <- placental_gene_expr |> 
   # Dividing the different patients into age_groups (10,20], (20,30], (30,40], (40,50]
   mutate(age_group = cut(age_years,
                          breaks = c(10,
@@ -55,31 +61,31 @@ merged_data <- merged_data |>
   relocate(age_group,
            .after = age_years) #Adding age_group column after age_years column
 # Checking the classes are divided correctly and age_group is placed after age_years
-print(head(merged_data))
+print(head(placental_gene_expr))
 ```
 
 ### Converting status to numeric values
 
 ```{r}
-merged_clean_aug <- merged_data |> 
+placental_gene_expr_clean_aug <- placental_gene_expr |> 
   #Creating a new column that converts status into numeric values
   mutate(y = case_when(
     status == "smoker" ~ 1,
     status == "non-smoker" ~ 0)) |> 
   relocate(status_num = y)
 #Checking the conversion
-merged_clean_aug
+placental_gene_expr_clean_aug
 ```
 
 ### Creating table with log2-fold-change and p-values
 
 ```{r}
-# Extract genedata from merged_data
+# Extract genedata from placental_gene_expr
 gene_cols <- grep("^ilmn",
-                  names(merged_data),
+                  names(placental_gene_expr),
                   value = TRUE)
 
-merged_log2_fold <- merged_data |>
+placental_gene_expr_log2_fold <- placental_gene_expr |>
   group_by(status) |> 
   # Calculate the mean value for expression levels, for each gene, divided into smoker and non-smoker
   summarise(across(all_of(gene_cols),
@@ -91,9 +97,9 @@ merged_log2_fold <- merged_data |>
   #Calculate the log2_fold_change for each gene             
               values_from = mean_expr) |> 
   mutate(log2_fold_change = log2(`smoker` / `non-smoker`))
-merged_log2_fold
+placental_gene_expr_log2_fold
 
-p_values <- merged_data |>
+p_values <- placental_gene_expr |>
   pivot_longer(cols = all_of(gene_cols),
                names_to = "gene",
                values_to = "expression") |>
@@ -102,11 +108,11 @@ p_values <- merged_data |>
   summarise(p_value = t.test(expression ~ status)$p.value)
 
 #Combine log2_fold_values and p-values into table 
-merged_log2_fold <- merged_log2_fold |> 
+placental_gene_expr_log2_fold <- placental_gene_expr_log2_fold |> 
   left_join(p_values, by = "gene")
 
 # Categorizing genes as upregulated or downregulated based on log2_fold_change
-merged_log2_fold <- merged_log2_fold |>
+placental_gene_expr_log2_fold <- placental_gene_expr_log2_fold |>
   mutate(Regulation = case_when(
     log2_fold_change > 0 ~ "Upregulated",
     log2_fold_change < 0 ~ "Downregulated")) |>
@@ -115,23 +121,21 @@ merged_log2_fold <- merged_log2_fold |>
     p_value > 0.05 ~ "Not significant"
   ))
 
-print(merged_log2_fold)
+print(placental_gene_expr_log2_fold)
 ```
 
 ### Saving the data in a tsv file
 
 ```{r}
 # Save the merged dataset to a tsv file
-write_tsv(merged_data,
-          file = "../data/03_dat_augment_merged_data.tsv")
+write_tsv(placental_gene_expr,
+          file = "../data/03_dat_augment_placental_gene_expr.tsv")
 
 # Save the merged log2 fold dataset to a tsv file
-write_tsv(merged_log2_fold,
+write_tsv(placental_gene_expr_log2_fold,
           file = "../data/03_dat_augment_log2_fold.tsv")
 
 # Save the merged clean dataset to a tsv file
-write_tsv(merged_clean_aug,
-          file = "../data/03_dat_augment_merged_clean_aug.tsv")
-
-
+write_tsv(placental_gene_expr_clean_aug,
+          file = "../data/03_dat_augment_placental_gene_expr_clean_aug.tsv")
 ```

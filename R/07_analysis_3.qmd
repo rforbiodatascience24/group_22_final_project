@@ -4,27 +4,31 @@ format: html
 editor: visual
 ---
 
+### Loading libraries
+
+```{r}
+#| message: false
+library(tidyverse)
+library(broom)
+library(patchwork)
+library(ggplot2)
+```
+
 ### Download data
 
 ```{r}
-merged_data <- read_tsv("../data/03_dat_augment_merged_clean_aug.tsv")
+placental_gene_expr_clean_aug <- read_tsv("../data/03_dat_augment_placental_gene_expr_clean_aug.tsv")
 ```
 
 ## Linear regression for genes associated with smoking
 
 ### Forest plot and Volcano plot (q value)
 
-```{r}
-#| message: false
-library(tidyverse)
-library(broom)
-```
-
-#### Creating a table with status, gene names and log2 expression levels
+### Creating a table with status, gene names and log2 expression levels
 
 ```{r}
 #Transforming the data to a long format to prepare it for analysis
-merged_clean_aug_long <- merged_clean_aug |> 
+placental_gene_expr_clean_aug_long <- placental_gene_expr_clean_aug |> 
   select(status_num, starts_with("ilmn")) |>                      #Selecting relevant columns
   pivot_longer(cols = starts_with("ilmn"),                        #Specifying which columns to be pivot
                names_to = "gene",                                 #Making a new column to store the gene names
@@ -32,10 +36,10 @@ merged_clean_aug_long <- merged_clean_aug |>
                ) |> 
   mutate(log2_expr = log2(expr_level))                            #
 
-merged_clean_aug_long <- merged_clean_aug_long |> 
+placental_gene_expr_clean_aug_long <- placental_gene_expr_clean_aug_long |> 
   select(status_num,gene,log2_expr)
 
-print(merged_clean_aug_long)
+print(placental_gene_expr_clean_aug_long)
 
 
 
@@ -44,16 +48,16 @@ print(merged_clean_aug_long)
 #### Creating a table with gene names and a data column containing status and log2 expression level for each gene
 
 ```{r}
-merged_clean_aug_long_nested <- merged_clean_aug_long |> 
+placental_gene_expr_clean_aug_long_nested <- placental_gene_expr_clean_aug_long |> 
   group_by(gene) |> 
   nest() |>  
   ungroup()
 
-merged_clean_aug_long_nested
+placental_gene_expr_clean_aug_long_nested
 ```
 
 ```{r}
-merged_clean_aug_long_nested |>
+placental_gene_expr_clean_aug_long_nested |>
   filter(gene == "ilmn_1343291") |> 
   pull(data)
 ```
@@ -61,16 +65,16 @@ merged_clean_aug_long_nested |>
 #### Creating a column with a model_object column
 
 ```{r}
-merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
+placental_gene_expr_clean_aug_long_nested <- placental_gene_expr_clean_aug_long_nested |> 
   group_by(gene) |> 
   mutate(model_object = map(.x = data,
                    .f = ~lm(formula = log2_expr ~ status_num,
                             data = .x)))
-merged_clean_aug_long_nested
+placental_gene_expr_clean_aug_long_nested
 ```
 
 ```{r}
-merged_clean_aug_long_nested |>
+placental_gene_expr_clean_aug_long_nested |>
   
   filter(gene == "ilmn_1343293") |> 
   
@@ -91,53 +95,53 @@ merged_clean_aug_long_nested |>
 #### Creating a column with model_object_tidy
 
 ```{r}
-merged_clean_aug_long_nested <- merged_clean_aug_long_nested |> 
+placental_gene_expr_clean_aug_long_nested <- placental_gene_expr_clean_aug_long_nested |> 
   mutate(model_object_tidy = map(.x = model_object, #specifies that the function will be applied to the model_object column
                                  .f = ~tidy(x = .x, # The x argument refers to the current model object being processed from the model_object column
                                             conf.int = TRUE, #include confidence intervals 
                                             conf.level = 0.95)))
-merged_clean_aug_long_nested
+placental_gene_expr_clean_aug_long_nested
 ```
 
 #### Unnest the model_object_tidy column
 
 ```{r}
-merged_estimates <- merged_clean_aug_long_nested |> 
+placental_gene_expr_estimates <- placental_gene_expr_clean_aug_long_nested |> 
   unnest(model_object_tidy)
 
-merged_estimates
+placental_gene_expr_estimates
 ```
 
 #### Filter, Select, and Convert Data Types for Gene Expression Estimates
 
 ```{r}
-merged_estimates <- merged_estimates |> 
+placental_gene_expr_estimates <- placental_gene_expr_estimates |> 
   filter(term == "status_num") |> 
   select(gene, p.value, estimate, conf.low, conf.high) |> 
   ungroup()
 
 cols_to_convert <- c("p.value", "estimate", "conf.low", "conf.high")
-merged_estimates[cols_to_convert] <- lapply(merged_estimates[cols_to_convert],
+placental_gene_expr_estimates[cols_to_convert] <- lapply(placental_gene_expr_estimates[cols_to_convert],
                                             function(x) as.numeric(as.character(x)))
 
-merged_estimates
+placental_gene_expr_estimates
 ```
 
 #### Finding q-value and determining if the results are significant
 
 ```{r}
-merged_estimates <- merged_estimates |> 
+placental_gene_expr_estimates <- placental_gene_expr_estimates |> 
   mutate(q.value = p.adjust(p.value),
          is_significant = case_when(q.value <= 0.05 ~ "yes",
                                     q.value > 0.05 ~ "no"))
 
-merged_estimates
+placental_gene_expr_estimates
 ```
 
 #### Finding the genes which are significant
 
 ```{r}
-merged_estimates |>
+placental_gene_expr_estimates |>
   filter(is_significant == "yes") |> 
   select(gene, p.value, q.value)
 ```
@@ -145,7 +149,7 @@ merged_estimates |>
 No significant q-values found. Plotting all estimates (even though they are not significant):
 
 ```{r}
-merged_estimates |> 
+placental_gene_expr_estimates |> 
   filter(is_significant == "no") |> 
   ggplot(aes(x = estimate,
              y = fct_reorder(gene, estimate),
@@ -169,7 +173,7 @@ merged_estimates |>
 
 ```{r}
 library("ggrepel")
-volcono_plot_q <- merged_estimates |>
+volcono_plot_q <- placental_gene_expr_estimates |>
   mutate(lbl = case_when(
     is_significant == "yes" ~ gene,
     is_significant == "no" ~ "")) |> 
@@ -205,18 +209,18 @@ Since no significant q-values were found, we decided to look at significant p-va
 
 ```{r}
 # Changed from looking at significant q-value in 07_analysis to looking at significant p-values
-merged_estimates_p <- merged_estimates |> 
+placental_gene_expr_estimates_p <- placental_gene_expr_estimates |> 
   mutate(q.value = p.adjust(p.value),
          is_significant = case_when(p.value <= 0.05 ~ "yes", # obs p-value
                                     p.value > 0.05 ~ "no"))
 
-merged_estimates_p
+placental_gene_expr_estimates_p
 ```
 
 #### Sorting for genes with a significant p-value (p\<0.05)
 
 ```{r}
-merged_estimates_p |>
+placental_gene_expr_estimates_p |>
   filter(is_significant == "yes") |> 
   select(gene, p.value, q.value)
 ```
@@ -224,7 +228,7 @@ merged_estimates_p |>
 ### Forest plot for all genes with a significant p-value
 
 ```{r}
-merged_estimates_p |> 
+placental_gene_expr_estimates_p |> 
   filter(is_significant == "yes") |> 
   ggplot(aes(x = estimate,
              y = fct_reorder(gene, estimate),
@@ -256,7 +260,7 @@ It is clear that all significant genes are divided into 3 clusters:
 This can also be concluded when looking at the numeric values for estimates for all significant genes:
 
 ```{r}
-merged_estimates_p |> 
+placental_gene_expr_estimates_p |> 
   filter(is_significant == "yes")
 ```
 
@@ -266,7 +270,7 @@ Therefore, we selected three genes to represent the three different clusters. Ne
 
 ```{r}
 # Looking at the linear regressions for three probe_IDs representing each of the 3 different estimated
-lr_ilmn_1651278 <- merged_clean_aug_long |>
+lr_ilmn_1651278 <- placental_gene_expr_clean_aug_long |>
   filter(gene == "ilmn_1651278_snip1") |>  
   ggplot(aes(x = status_num, 
              y = log2_expr,
@@ -285,7 +289,7 @@ lr_ilmn_1651278 <- merged_clean_aug_long |>
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels
   
 
-lr_ilmn_1651375 <- merged_clean_aug_long |>
+lr_ilmn_1651375 <- placental_gene_expr_clean_aug_long |>
   filter(gene == "ilmn_1651375_bicd2") |>  
   ggplot(aes(x = status_num, 
              y = log2_expr,
@@ -304,7 +308,7 @@ lr_ilmn_1651375 <- merged_clean_aug_long |>
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels)
 
 
-lr_ilmn_1651767 <- merged_clean_aug_long |>
+lr_ilmn_1651767 <- placental_gene_expr_clean_aug_long |>
   filter(gene == "ilmn_1651767_mkl1") |>  
   ggplot(aes(x = status_num, 
              y = log2_expr,
@@ -323,6 +327,21 @@ lr_ilmn_1651767 <- merged_clean_aug_long |>
                      labels = c("0" = "Non-smoker", "1" = "Smoker"))  # Set legend labels))
 
   
+# Combine the three plots vertically (stacking them)
+#linear_regression_plot <- lr_ilmn_1651278 / 
+                         #lr_ilmn_1651375 / 
+                         #lr_ilmn_1651767 + 
+  #plot_layout(ncol = 1) +  # Stacks the plots vertically (1 column)
+  #plot_annotation(
+    #title = "Linear Regression of Gene Expression Levels",
+    #caption = "DOI: https://doi.org/10.1016/j.placenta.2009.12.016"
+  #)
+
+# Save the combined plot
+#ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, height = 15, width = 8, 
+       #units = "in")
+
+
 linear_regression_plot <- lr_ilmn_1651278 / lr_ilmn_1651375 / lr_ilmn_1651767 + 
   plot_layout(guides = "collect", 
               heights = c(5, 5, 5),   # Adjust row heights
@@ -343,7 +362,7 @@ ggsave("../results/plots/linear_regression_plot.png", linear_regression_plot, he
 ### Forest plot for three genes
 
 ```{r}
-merged_estimates_p |> 
+placental_gene_expr_estimates_p |> 
   filter(gene %in% c("ilmn_1651278_snip1", "ilmn_1651375_bicd2", "ilmn_1651767_mkl1")) |> 
   ggplot(aes(x = estimate,
              y = fct_reorder(gene, estimate),
@@ -366,7 +385,7 @@ merged_estimates_p |>
 ### Forest plot for 30 random significant genes (p\<0.05)
 
 ```{r}
-merged_estimates_p |> 
+placental_gene_expr_estimates_p |> 
   filter(is_significant == "yes") |> 
   sample_n(30) |> 
   ggplot(aes(x = estimate,
@@ -390,7 +409,7 @@ merged_estimates_p |>
 ### Volcano plot
 
 ```{r}
-volcano_plot <- merged_estimates_p |>
+volcano_plot <- placental_gene_expr_estimates_p |>
   mutate(lbl = case_when(
     is_significant == "yes" ~ gene,
     is_significant == "no" ~ "")) |> 
