@@ -4,6 +4,14 @@ format: html
 editor: visual
 ---
 
+### Loading libraries
+
+```{r}
+#| message: false
+library(tidyverse)
+library(broom)
+```
+
 ### Download data
 
 ```{r}
@@ -13,12 +21,6 @@ merged_data <- read_tsv("../data/03_dat_augment_merged_clean_aug.tsv")
 ## Linear regression for genes associated with smoking
 
 ### Forest plot and Volcano plot (q value)
-
-```{r}
-#| message: false
-library(tidyverse)
-library(broom)
-```
 
 #### Creating a table with status, gene names and log2 expression levels
 
