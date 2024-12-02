@@ -288,8 +288,8 @@ lr_ilmn_1651278 <- placental_gene_expr_clean_aug_long |>
               color = "black") +  
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
-  labs(x = "",
-       y = "",
+  labs(x = "Status",
+       y = "Log2 Expr. level",
        title = "ILMN_1651278_snip1",
        color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
@@ -307,7 +307,7 @@ lr_ilmn_1651375 <- placental_gene_expr_clean_aug_long |>
               color = "black") +  
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
-  labs(x = "",
+  labs(x = "Status",
     y = "Log2 Expr. level",
     title = "ILMN_1651375_bicd2",
     color = "Smoking Status") +  # Set legend title
@@ -327,7 +327,7 @@ lr_ilmn_1651767 <- placental_gene_expr_clean_aug_long |>
   theme_minimal(base_size = 12) +
   theme(plot.caption = element_text(size = 8)) +
  labs(x = "Status",
-    y = "",
+    y = "Log2 Expr. level",
     title = "ILMN_1651767_mkl1",
     color = "Smoking Status") +  # Set legend title
   scale_color_manual(values = c("0" = "#F9A1A1", "1" = "#63B8B8"),
