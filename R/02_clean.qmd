@@ -205,5 +205,9 @@ print(head(merged_data))
 # Save the merged dataset to a tsv file
 write_tsv(merged_data,
           file = "../data/02_dat_clean.tsv")
+write_tsv(tidy_characteristics,
+          file = "../data/02_dat_clean_characteristics.tsv")
+write_tsv(tidy_genes,
+          file = "../data/02_dat_clean_genes.tsv")
 
 ```
